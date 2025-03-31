@@ -129,7 +129,7 @@ export default function Pets() {
                   }`}
                   onClick={() => setModoGerador('tradicional')}
                 >
-                  Gerador Clássico
+                  Gerador Simples
                 </button>
                 <button
                   type="button"
@@ -140,7 +140,7 @@ export default function Pets() {
                   }`}
                   onClick={() => setModoGerador('ia')}
                 >
-                  Gerador com IA
+                  Gerador Inteligente
                 </button>
               </div>
             </div>

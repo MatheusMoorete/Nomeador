@@ -104,7 +104,7 @@ export default function Bebes() {
                     }`}
                     onClick={() => setModoGerador('tradicional')}
                   >
-                    Gerador Clássico
+                    Gerador Simples
                   </button>
                   <button
                     type="button"
@@ -115,7 +115,7 @@ export default function Bebes() {
                     }`}
                     onClick={() => setModoGerador('ia')}
                   >
-                    Gerador com IA
+                    Gerador Inteligente
                   </button>
                 </div>
               </div>
