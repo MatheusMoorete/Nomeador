@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nomeador
 
-## Getting Started
+Um gerador de nomes para pets, jogos, bebês e muito mais!
 
-First, run the development server:
+## Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 🐕 Geração de nomes para pets
+- 🎮 Nomes para personagens de jogos
+- 👶 Nomes para bebês
+- ⚡ Nomes aleatórios para diversos usos
+- ❤️ Salvar nomes favoritos
+- 📊 Histórico de nomes gerados
+- 🧠 Geração inteligente de nomes com IA
+- 📱 Design responsivo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologias Utilizadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [OpenAI API](https://openai.com/blog/openai-api)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Configuração do Ambiente
 
-## Learn More
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/MatheusMoorete/Nomeador.git
+   cd Nomeador
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Configure o arquivo de ambiente:
+   Crie um arquivo `.env.local` na raiz do projeto com o seguinte conteúdo:
+   ```
+   OPENAI_API_KEY=sua_chave_da_api_aqui
+   OPENAI_API_URL=https://api.openai.com/v1/chat/completions
+   OPENAI_MODEL=gpt-3.5-turbo
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+5. Acesse o projeto em [http://localhost:3000](http://localhost:3000)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Características do Gerador de IA
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O gerador de nomes com IA permite:
+- Selecionar o gênero (masculino, feminino ou neutro)
+- Escolher a origem (brasileiro, internacional, clássico)
+- Adicionar características desejadas para o nome
+- Visualizar significado e origem dos nomes gerados
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT.
