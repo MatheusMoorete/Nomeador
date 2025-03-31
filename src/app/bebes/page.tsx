@@ -698,14 +698,16 @@ export default function Bebes() {
     setIsGenerating(true);
     
     setTimeout(() => {
+      // Escolher uma origem aleatória para mais variedade
+      const origens = ['brasileiro', 'internacional', 'classico'];
+      const origemAleatoria = origens[Math.floor(Math.random() * origens.length)];
+      
       let listaDeNomes: string[] = [];
       
       if (genero === 'menino') {
-        const origemAtual = origem as keyof typeof nomesMenino;
-        listaDeNomes = nomesMenino[origemAtual];
+        listaDeNomes = nomesMenino[origemAleatoria as keyof typeof nomesMenino];
       } else {
-        const origemAtual = origem as keyof typeof nomesMenina;
-        listaDeNomes = nomesMenina[origemAtual];
+        listaDeNomes = nomesMenina[origemAleatoria as keyof typeof nomesMenina];
       }
       
       const indiceAleatorio = Math.floor(Math.random() * listaDeNomes.length);
@@ -713,6 +715,9 @@ export default function Bebes() {
       
       let novoSignificado = '';
       let novaCaracteristica = '';
+      
+      // Atualizar a origem para buscar o significado e característica corretos
+      setOrigem(origemAleatoria);
       
       const nomeCompleto = obterNomeCompleto(nome);
       if (nomeCompleto) {
@@ -724,6 +729,7 @@ export default function Bebes() {
       setSignificado(novoSignificado);
       setCaracteristica(novaCaracteristica);
       
+      // Armazenar o nome atual no histórico, se houver um nome anterior
       if (nomeGerado) {
         setNomesAnteriores(prev => [
           { 
@@ -805,36 +811,6 @@ export default function Bebes() {
                     </button>
                   </div>
                   
-                  <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                    Origem
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <button 
-                      className={`px-4 py-2 rounded-lg ${origem === 'brasileiro' 
-                        ? genero === 'menino' ? 'bg-blue-500 text-white' : 'bg-pink-500 text-white' 
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                      onClick={() => setOrigem('brasileiro')}
-                    >
-                      Brasileiro
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg ${origem === 'internacional' 
-                        ? genero === 'menino' ? 'bg-blue-500 text-white' : 'bg-pink-500 text-white' 
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                      onClick={() => setOrigem('internacional')}
-                    >
-                      Internacional
-                    </button>
-                    <button 
-                      className={`px-4 py-2 rounded-lg ${origem === 'classico' 
-                        ? genero === 'menino' ? 'bg-blue-500 text-white' : 'bg-pink-500 text-white' 
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                      onClick={() => setOrigem('classico')}
-                    >
-                      Clássico
-                    </button>
-                  </div>
-
                   <button 
                     className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
                       genero === 'menino' 
@@ -861,6 +837,13 @@ export default function Bebes() {
             <div className="w-full flex flex-col gap-4">
               <NomeDisplay 
                 nome={nomeGerado} 
+                caracteristica={significado && caracteristica 
+                  ? `Significado: ${significado}\nCaracterística: ${caracteristica}`
+                  : significado 
+                    ? `Significado: ${significado}` 
+                    : caracteristica 
+                      ? `Característica: ${caracteristica}`
+                      : ''}
                 onGerarNovo={gerarNome}
                 corDestaque={genero === 'menino' 
                   ? 'text-blue-500 dark:text-blue-400' 
@@ -868,17 +851,6 @@ export default function Bebes() {
                 mostrarAnuncio={false}
                 categoria="bebes"
               />
-              
-              {significado && (
-                <p className="text-lg text-gray-700">
-                  <span className="font-semibold">Significado:</span> {significado}
-                </p>
-              )}
-              {caracteristica && (
-                <p className="text-lg text-gray-700">
-                  <span className="font-semibold">Característica:</span> {caracteristica}
-                </p>
-              )}
               
               <AdBanner adSlot="bebes-historico" />
               

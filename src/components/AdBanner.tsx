@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useRef, useId } from 'react';
 
 interface AdBannerProps {
   adSlot?: string;
@@ -18,7 +17,9 @@ export default function AdBanner({
   fullWidthResponsive = true,
   className = ''
 }: AdBannerProps) {
-  const [adId] = useState(`ad-${uuidv4().slice(0, 8)}`);
+  // Usar useId em vez de UUID para garantir IDs iguais no servidor e cliente
+  const id = useId();
+  const adId = `ad-${id}`;
   const adInitialized = useRef(false);
 
   useEffect(() => {
