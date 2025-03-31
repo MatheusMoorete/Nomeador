@@ -131,9 +131,23 @@ function processHuggingFaceResponse(text: string): GeneratedName[] {
     
     const parts = line.split('-').map(part => part.trim());
     
-    // Limpar novamente o nome para garantir que não tenha prefixos indesejados
+    // Obter o nome e garantir que não tenha prefixos indesejados
     let nome = parts[0] || 'Nome não identificado';
-    nome = nome.replace(/^[\/\s>]*\d+[\.\s]*/g, '').trim();
+    
+    // Solução mais radical - aplicar várias expressões regulares específicas
+    nome = nome.replace(/^s>[^\w]*/gi, '').trim();
+    nome = nome.replace(/^s>\d+\.\s*/gi, '').trim();
+    nome = nome.replace(/^\d+\.\s*/g, '').trim();
+    nome = nome.replace(/^[^a-zA-ZÀ-ÿ]*/g, '').trim(); // Remove tudo que não for letras do início
+    
+    // Verificar se o nome está limpo depois das expressões regulares
+    if (nome.startsWith('s>') || /^\d+\./.test(nome)) {
+      // Se ainda tiver prefixos, tentar extrair apenas a parte que contém letras
+      const matches = nome.match(/[a-zA-ZÀ-ÿ].*/);
+      if (matches && matches[0]) {
+        nome = matches[0];
+      }
+    }
     
     return {
       nome: nome,
