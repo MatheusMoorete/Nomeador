@@ -126,10 +126,17 @@ function processHuggingFaceResponse(text: string): GeneratedName[] {
   
   // Processar cada linha para extrair nomes
   return lines.map(line => {
+    // Limpar prefixos numéricos e caracteres especiais que podem aparecer
+    line = line.replace(/^[\s\d\W]*?(\w)/i, '$1');
+    
     const parts = line.split('-').map(part => part.trim());
     
+    // Limpar novamente o nome para garantir que não tenha prefixos indesejados
+    let nome = parts[0] || 'Nome não identificado';
+    nome = nome.replace(/^[\/\s>]*\d+[\.\s]*/g, '').trim();
+    
     return {
-      nome: parts[0] || 'Nome não identificado',
+      nome: nome,
       significado: parts[1] || 'Significado desconhecido',
       origem: parts[2] || 'Origem desconhecida'
     };
