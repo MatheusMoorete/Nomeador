@@ -834,7 +834,7 @@ export default function Bebes() {
           </div>
 
           {modoGerador === 'tradicional' && nomeGerado && (
-            <div className="w-full flex flex-col gap-4">
+            <div className="w-full flex flex-col gap-2">
               <NomeDisplay 
                 nome={nomeGerado} 
                 caracteristica={significado && caracteristica 
@@ -852,18 +852,16 @@ export default function Bebes() {
                 categoria="bebes"
               />
               
-              <AdBanner adSlot="bebes-historico" />
-              
               {nomesAnteriores.length > 0 && (
-                <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-4">
-                  <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-2">
+                  <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Nomes anteriores:
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {nomesAnteriores.map((item, index) => (
                       <div 
                         key={index} 
-                        className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg"
+                        className="bg-gray-50 dark:bg-gray-700 p-2 rounded-lg"
                       >
                         <div className="font-medium text-lg">
                           {item.nome}
@@ -883,6 +881,10 @@ export default function Bebes() {
                   </div>
                 </div>
               )}
+              
+              <div className="mt-2">
+                <AdBanner adSlot="bebes-historico" />
+              </div>
             </div>
           )}
         </div>

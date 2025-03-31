@@ -51,7 +51,7 @@ export default function AdBanner({
   }, []);
 
   return (
-    <div className="w-full flex justify-center my-8">
+    <div className="w-full flex justify-center my-4">
       <div className={`max-w-2xl w-full mx-auto px-4 ${className}`}>
         <div id={adId}>
           <ins
