@@ -17,6 +17,7 @@ export interface GeneratedName {
   significado?: string;
   origem?: string;
   fonte?: 'api' | 'local'; // Indica a origem do nome
+  tipo?: string; // Indica o tipo de animal (para pets)
 }
 
 export async function generateNames(options: NameGenerationOptions): Promise<GeneratedName[]> {
@@ -97,9 +98,51 @@ function buildPrompt(options: NameGenerationOptions): string {
   const { categoria, genero, origem, caracteristicas, evitar } = options;
   
   let categoriaTexto = '';
+  let tipoAnimal = '';
+  
+  // Verificar se há alguma característica que indica tipo de animal específico
+  if (categoria === 'pets' && caracteristicas && caracteristicas.length > 0) {
+    const tipoCaracteristica = caracteristicas.find(c => c.toLowerCase().includes('tipo de animal:'));
+    if (tipoCaracteristica) {
+      // Extrair o tipo de animal da característica
+      tipoAnimal = tipoCaracteristica.toLowerCase().replace('tipo de animal:', '').trim();
+    }
+  }
+  
   switch (categoria) {
     case 'pets':
-      categoriaTexto = 'animal de estimação';
+      if (tipoAnimal) {
+        switch (tipoAnimal) {
+          case 'cachorro':
+            categoriaTexto = 'cachorro ou cão';
+            break;
+          case 'gato':
+            categoriaTexto = 'gato ou felino';
+            break;
+          case 'peixe':
+            categoriaTexto = 'peixe ou animal aquático';
+            break;
+          case 'coelho':
+            categoriaTexto = 'coelho ou leporídeo';
+            break;
+          case 'roedor':
+            categoriaTexto = 'hamster, ratinho, porquinho-da-índia ou roedor';
+            break;
+          case 'ave':
+            categoriaTexto = 'pássaro, papagaio, calopsita, canário ou ave';
+            break;
+          case 'reptil':
+            categoriaTexto = 'lagarto, iguana, cobra, tartaruga ou réptil';
+            break;
+          case 'exotico':
+            categoriaTexto = 'animal exótico como furão, ouriço, tamanduá ou outro pet não convencional';
+            break;
+          default:
+            categoriaTexto = tipoAnimal;
+        }
+      } else {
+        categoriaTexto = 'animal de estimação';
+      }
       break;
     case 'jogos':
       categoriaTexto = 'personagem de jogo ou usuário de jogo';
@@ -122,8 +165,13 @@ function buildPrompt(options: NameGenerationOptions): string {
     prompt += ` com origem ${origem}`;
   }
   
-  if (caracteristicas && caracteristicas.length > 0) {
-    prompt += ` que transmita as seguintes características: ${caracteristicas.join(', ')}`;
+  // Filtrando características para remover o tipo de animal se já foi usado
+  const caracteristicasFiltradas = caracteristicas ? 
+    caracteristicas.filter(c => !c.toLowerCase().includes('tipo de animal:')) : 
+    [];
+  
+  if (caracteristicasFiltradas.length > 0) {
+    prompt += ` que transmita as seguintes características: ${caracteristicasFiltradas.join(', ')}`;
   }
   
   if (evitar && evitar.length > 0) {
@@ -156,6 +204,46 @@ export function getFallbackNames(options: NameGenerationOptions): GeneratedName[
     // Use type assertion para evitar erro de tipagem
     const categoria = options.categoria as keyof typeof FALLBACK_NAMES;
     filteredNames = FALLBACK_NAMES[categoria] || FALLBACK_NAMES.aleatorios;
+    
+    // Se for pet e tiver característica de tipo de animal, filtrar por tipo
+    if (options.categoria === 'pets' && options.caracteristicas && options.caracteristicas.length > 0) {
+      const tipoCaracteristica = options.caracteristicas.find(c => 
+        c.toLowerCase().includes('tipo de animal:')
+      );
+      
+      if (tipoCaracteristica) {
+        const tipoAnimal = tipoCaracteristica.toLowerCase()
+          .replace('tipo de animal:', '')
+          .trim();
+        
+        // Mapeamento para tipos de animais
+        const tipoMap: Record<string, string> = {
+          'cachorro': 'Cachorro',
+          'gato': 'Gato',
+          'peixe': 'Peixe',
+          'coelho': 'Coelho',
+          'roedor': 'Roedor',
+          'ave': 'Ave',
+          'reptil': 'Réptil',
+          'exotico': 'Exótico'
+        };
+        
+        const tipoFiltro = tipoMap[tipoAnimal] || (
+          tipoAnimal.charAt(0).toUpperCase() + tipoAnimal.slice(1)
+        );
+        
+        // Filtrar nomes pelo tipo de animal
+        filteredNames = filteredNames.filter(nome => 
+          nome.tipo === tipoFiltro
+        );
+        
+        // Se não encontrar nenhum nome após o filtro, voltar para todos
+        if (filteredNames.length === 0) {
+          const categoria = options.categoria as keyof typeof FALLBACK_NAMES;
+          filteredNames = FALLBACK_NAMES[categoria] || FALLBACK_NAMES.aleatorios;
+        }
+      }
+    }
   }
   
   // Selecionar aleatoriamente um número de nomes baseado na quantidade solicitada
@@ -181,26 +269,85 @@ export function getFallbackNames(options: NameGenerationOptions): GeneratedName[
 // Biblioteca expandida de nomes de fallback
 const FALLBACK_NAMES = {
   pets: [
-    { nome: 'Luna', significado: 'Relacionado à lua', origem: 'Latim' },
-    { nome: 'Thor', significado: 'Deus do trovão', origem: 'Nórdico' },
-    { nome: 'Amora', significado: 'Fruta doce', origem: 'Português' },
-    { nome: 'Max', significado: 'O maior, o melhor', origem: 'Latim' },
-    { nome: 'Bela', significado: 'Bonita', origem: 'Italiano' },
-    { nome: 'Simba', significado: 'Leão', origem: 'Suaíli' },
-    { nome: 'Nala', significado: 'Presente', origem: 'Africano' },
-    { nome: 'Rex', significado: 'Rei', origem: 'Latim' },
-    { nome: 'Bolinha', significado: 'Pequena bola', origem: 'Português' },
-    { nome: 'Nina', significado: 'Graciosa', origem: 'Espanhol' },
-    { nome: 'Kiki', significado: 'Duplo reforço', origem: 'Francês' },
-    { nome: 'Rocky', significado: 'Rocha, forte', origem: 'Inglês' },
-    { nome: 'Café', significado: 'Grão da planta coffea', origem: 'Português' },
-    { nome: 'Pretinha', significado: 'De cor preta', origem: 'Português' },
-    { nome: 'Cookie', significado: 'Biscoito', origem: 'Inglês' },
-    { nome: 'Mel', significado: 'Doce como mel', origem: 'Português' },
-    { nome: 'Stitch', significado: 'Ponto de costura', origem: 'Inglês' },
-    { nome: 'Tobby', significado: 'Deus é bom', origem: 'Hebraico' },
-    { nome: 'Pantera', significado: 'Felino ágil', origem: 'Grego' },
-    { nome: 'Belinha', significado: 'Pequena bela', origem: 'Português' }
+    // Cães
+    { nome: 'Luna', significado: 'Relacionado à lua', origem: 'Latim', tipo: 'Cachorro' },
+    { nome: 'Thor', significado: 'Deus do trovão', origem: 'Nórdico', tipo: 'Cachorro' },
+    { nome: 'Amora', significado: 'Fruta doce', origem: 'Português', tipo: 'Cachorro' },
+    { nome: 'Max', significado: 'O maior, o melhor', origem: 'Latim', tipo: 'Cachorro' },
+    { nome: 'Bela', significado: 'Bonita', origem: 'Italiano', tipo: 'Cachorro' },
+    { nome: 'Rex', significado: 'Rei', origem: 'Latim', tipo: 'Cachorro' },
+    { nome: 'Mel', significado: 'Doce como mel', origem: 'Português', tipo: 'Cachorro' },
+    { nome: 'Tobby', significado: 'Deus é bom', origem: 'Hebraico', tipo: 'Cachorro' },
+    
+    // Gatos
+    { nome: 'Oliver', significado: 'Oliveira', origem: 'Francês', tipo: 'Gato' },
+    { nome: 'Mia', significado: 'Minha', origem: 'Italiano', tipo: 'Gato' },
+    { nome: 'Simba', significado: 'Leão', origem: 'Suaíli', tipo: 'Gato' },
+    { nome: 'Nala', significado: 'Presente', origem: 'Africano', tipo: 'Gato' },
+    { nome: 'Felix', significado: 'Feliz, sortudo', origem: 'Latim', tipo: 'Gato' },
+    { nome: 'Mimi', significado: 'Variação de Miriam', origem: 'Hebraico', tipo: 'Gato' },
+    { nome: 'Garfield', significado: 'Campo da lança', origem: 'Inglês', tipo: 'Gato' },
+    { nome: 'Frajola', significado: 'Manchado', origem: 'Português', tipo: 'Gato' },
+    
+    // Peixes
+    { nome: 'Nemo', significado: 'Ninguém', origem: 'Latim', tipo: 'Peixe' },
+    { nome: 'Dory', significado: 'Dourada', origem: 'Grego', tipo: 'Peixe' },
+    { nome: 'Bolha', significado: 'Pequena esfera de ar', origem: 'Português', tipo: 'Peixe' },
+    { nome: 'Flash', significado: 'Rápido como um relâmpago', origem: 'Inglês', tipo: 'Peixe' },
+    { nome: 'Coral', significado: 'Estrutura marinha colorida', origem: 'Latim', tipo: 'Peixe' },
+    { nome: 'Goldie', significado: 'Dourado', origem: 'Inglês', tipo: 'Peixe' },
+    { nome: 'Finn', significado: 'Barbatana', origem: 'Inglês', tipo: 'Peixe' },
+    { nome: 'Marlin', significado: 'Peixe marinho', origem: 'Inglês', tipo: 'Peixe' },
+    
+    // Coelhos
+    { nome: 'Pernalonga', significado: 'Que tem pernas longas', origem: 'Português', tipo: 'Coelho' },
+    { nome: 'Fofinho', significado: 'Macio, peludo', origem: 'Português', tipo: 'Coelho' },
+    { nome: 'Thumper', significado: 'Batedor, que bate com as patas', origem: 'Inglês', tipo: 'Coelho' },
+    { nome: 'Algodão', significado: 'Planta macia e branca', origem: 'Árabe', tipo: 'Coelho' },
+    { nome: 'Cenoura', significado: 'Vegetal alaranjado', origem: 'Português', tipo: 'Coelho' },
+    { nome: 'Floco', significado: 'Pequenos pedaços', origem: 'Português', tipo: 'Coelho' },
+    { nome: 'Tambor', significado: 'Instrumento de percussão', origem: 'Persa', tipo: 'Coelho' },
+    { nome: 'Felpudo', significado: 'Peludo, cheio de pelos', origem: 'Português', tipo: 'Coelho' },
+    
+    // Roedores (Hamsters, etc)
+    { nome: 'Pipoca', significado: 'Milho estourado', origem: 'Tupi', tipo: 'Roedor' },
+    { nome: 'Bolinha', significado: 'Pequena bola', origem: 'Português', tipo: 'Roedor' },
+    { nome: 'Mickey', significado: 'Quem é como Deus', origem: 'Hebraico', tipo: 'Roedor' },
+    { nome: 'Minnie', significado: 'Rebelde', origem: 'Alemão', tipo: 'Roedor' },
+    { nome: 'Stuart', significado: 'Guardião', origem: 'Inglês', tipo: 'Roedor' },
+    { nome: 'Amendoim', significado: 'Noz subterrânea', origem: 'Português', tipo: 'Roedor' },
+    { nome: 'Cookie', significado: 'Biscoito', origem: 'Inglês', tipo: 'Roedor' },
+    { nome: 'Pitufo', significado: 'Pequeno ser azul', origem: 'Belga', tipo: 'Roedor' },
+    
+    // Aves
+    { nome: 'Blu', significado: 'Azul', origem: 'Inglês', tipo: 'Ave' },
+    { nome: 'Louro', significado: 'Dourado', origem: 'Português', tipo: 'Ave' },
+    { nome: 'Zazu', significado: 'Movimento', origem: 'Africano', tipo: 'Ave' },
+    { nome: 'Sky', significado: 'Céu', origem: 'Inglês', tipo: 'Ave' },
+    { nome: 'Jade', significado: 'Pedra preciosa verde', origem: 'Espanhol', tipo: 'Ave' },
+    { nome: 'Petúnia', significado: 'Flor', origem: 'Latim', tipo: 'Ave' },
+    { nome: 'Kiwi', significado: 'Ave não voadora', origem: 'Maori', tipo: 'Ave' },
+    { nome: 'Esmeralda', significado: 'Pedra preciosa verde', origem: 'Grego', tipo: 'Ave' },
+    
+    // Répteis
+    { nome: 'Draco', significado: 'Dragão', origem: 'Latim', tipo: 'Réptil' },
+    { nome: 'Spike', significado: 'Espinho', origem: 'Inglês', tipo: 'Réptil' },
+    { nome: 'Yoshi', significado: 'Boa sorte', origem: 'Japonês', tipo: 'Réptil' },
+    { nome: 'Rango', significado: 'Comida', origem: 'Espanhol', tipo: 'Réptil' },
+    { nome: 'Crush', significado: 'Paixão', origem: 'Inglês', tipo: 'Réptil' },
+    { nome: 'Ziggy', significado: 'Vitória', origem: 'Alemão', tipo: 'Réptil' },
+    { nome: 'Komodo', significado: 'Ilha da Indonésia', origem: 'Indonésio', tipo: 'Réptil' },
+    { nome: 'Mushu', significado: 'Dragão lendário', origem: 'Chinês', tipo: 'Réptil' },
+    
+    // Exóticos
+    { nome: 'Django', significado: 'Eu desperto', origem: 'Romani', tipo: 'Exótico' },
+    { nome: 'Yoda', significado: 'Mestre guerreiro', origem: 'Ficcional', tipo: 'Exótico' },
+    { nome: 'Pandora', significado: 'Todos os dons', origem: 'Grego', tipo: 'Exótico' },
+    { nome: 'Aurora', significado: 'Amanhecer', origem: 'Latim', tipo: 'Exótico' },
+    { nome: 'Nebulosa', significado: 'Nuvem estelar', origem: 'Latim', tipo: 'Exótico' },
+    { nome: 'Onyx', significado: 'Pedra preciosa negra', origem: 'Grego', tipo: 'Exótico' },
+    { nome: 'Cosmos', significado: 'Universo', origem: 'Grego', tipo: 'Exótico' },
+    { nome: 'Quimera', significado: 'Criatura mitológica', origem: 'Grego', tipo: 'Exótico' }
   ],
   
   jogos: [

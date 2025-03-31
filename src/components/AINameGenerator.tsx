@@ -29,6 +29,7 @@ export default function AINameGenerator({
   const [novoNomeIndex, setNovoNomeIndex] = useState(0);
   const [inputCaract, setInputCaract] = useState('');
   const [error, setError] = useState('');
+  const [tipoPet, setTipoPet] = useState<string>('qualquer');
 
   const gerarNomesIA = useCallback(async () => {
     try {
@@ -37,7 +38,20 @@ export default function AINameGenerator({
       
       // Gerar vários nomes de uma vez para economizar chamadas à API
       const quantidade = 5;
-      const newOptions = { ...options, quantidade };
+      
+      // Adicionar o tipo de pet às características se estiver selecionado
+      let newOptions = { ...options, quantidade };
+      
+      if (categoria === 'pets' && tipoPet !== 'qualquer') {
+        // Adicionar o tipo de pet como uma característica
+        newOptions = {
+          ...newOptions,
+          caracteristicas: [
+            ...(newOptions.caracteristicas || []),
+            `tipo de animal: ${tipoPet}`
+          ]
+        };
+      }
       
       const results = await generateNames(newOptions);
       setNomesGerados(results);
@@ -48,7 +62,7 @@ export default function AINameGenerator({
     } finally {
       setIsGenerating(false);
     }
-  }, [options]);
+  }, [options, categoria, tipoPet]);
 
   const mostrarProximoNome = useCallback(() => {
     if (novoNomeIndex < nomesGerados.length - 1) {
@@ -119,6 +133,107 @@ export default function AINameGenerator({
           </button>
         </div>
       </div>
+
+      {/* Seletor de tipo de pet (apenas para categoria pets) */}
+      {categoria === 'pets' && (
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+            Tipo de Animal
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'qualquer' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('qualquer')}
+            >
+              Qualquer
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'cachorro' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('cachorro')}
+            >
+              Cachorro
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'gato' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('gato')}
+            >
+              Gato
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'peixe' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('peixe')}
+            >
+              Peixe
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'coelho' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('coelho')}
+            >
+              Coelho
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'roedor' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('roedor')}
+            >
+              Hamster/Roedor
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'ave' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('ave')}
+            >
+              Ave
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'reptil' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('reptil')}
+            >
+              Réptil
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoPet === 'exotico' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoPet('exotico')}
+            >
+              Exótico
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mb-4">
         <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
@@ -272,6 +387,25 @@ export default function AINameGenerator({
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
               <span className="font-semibold">Origem:</span> {nomesGerados[novoNomeIndex].origem || 'Não disponível'}
             </p>
+            
+            {/* Exibir o tipo do animal se estiver na categoria pets e tiver a propriedade tipo */}
+            {categoria === 'pets' && nomesGerados[novoNomeIndex].tipo && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                <span className="font-semibold">Tipo de animal:</span> {nomesGerados[novoNomeIndex].tipo}
+              </p>
+            )}
+            
+            {/* Exibir a informação sobre o tipoPet selecionado */}
+            {categoria === 'pets' && tipoPet !== 'qualquer' && !nomesGerados[novoNomeIndex].tipo && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                <span className="font-semibold">Nome adequado para:</span> {
+                  tipoPet === 'reptil' ? 'Réptil' :
+                  tipoPet === 'roedor' ? 'Hamster/Roedor' :
+                  tipoPet.charAt(0).toUpperCase() + tipoPet.slice(1)
+                }
+              </p>
+            )}
+            
             {nomesGerados[novoNomeIndex].fonte && (
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                 <span className="inline-flex items-center px-2 py-1 rounded-full bg-gray-200 dark:bg-gray-600">
