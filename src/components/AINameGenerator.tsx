@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { GeneratedName, NameGenerationOptions, generateNames } from '@/services/aiNameGenerator';
 import NomeDisplay from './NomeDisplay';
+import { CARACTERISTICAS_PETS, CARACTERISTICAS_GERAIS_PETS } from '@/data/caracteristicasPets';
 
 interface AINameGeneratorProps {
   categoria: 'pets' | 'jogos' | 'bebes' | 'aleatorios';
@@ -89,6 +90,59 @@ export default function AINameGenerator({
       caracteristicas: prev.caracteristicas?.filter((_, i) => i !== index)
     }));
   }, []);
+
+  // Função para obter uma característica aleatória para o pet gerado
+  const obterCaracteristicaAleatoria = useCallback((tipo: string): string => {
+    // Se não é pet, retorna vazio
+    if (categoria !== 'pets') return '';
+    
+    // Obter uma lista de características específicas para o tipo de animal
+    let tipoEfetivo = tipo || tipoPet;
+    if (tipoEfetivo === 'qualquer') {
+      // Escolher um tipo aleatório se for qualquer
+      const tipos = ['cachorro', 'gato', 'peixe', 'coelho', 'roedor', 'ave', 'reptil', 'exotico'];
+      tipoEfetivo = tipos[Math.floor(Math.random() * tipos.length)];
+    }
+    
+    const caracteristicasEspecificas = CARACTERISTICAS_PETS[tipoEfetivo] || [];
+    
+    // Combinar com características gerais
+    const todasCaracteristicas = [...caracteristicasEspecificas, ...CARACTERISTICAS_GERAIS_PETS];
+    
+    // Selecionar uma característica aleatória
+    const indiceAleatorio = Math.floor(Math.random() * todasCaracteristicas.length);
+    return todasCaracteristicas[indiceAleatorio];
+  }, [categoria, tipoPet]);
+  
+  // Função para formatar a descrição do pet
+  const getDescricaoPersonalizada = useCallback((nome: string, tipo?: string) => {
+    if (categoria !== 'pets') return '';
+    
+    const caracteristica = obterCaracteristicaAleatoria(tipo?.toLowerCase() || '');
+    if (!caracteristica) return '';
+    
+    // Lista de templates de frases para tornar a descrição mais personalizada
+    const templates = [
+      `Geralmente, {nome} são {caracteristica}.`,
+      `{nome} costumam ser {caracteristica}.`,
+      `Pets como {nome} são conhecidos por serem {caracteristica}.`,
+      `{nome} tem a reputação de ser {caracteristica}.`,
+      `Os {nome} do mundo são famosos por serem {caracteristica}.`,
+      `Todo mundo sabe que {nome} adoram ser {caracteristica}.`,
+      `É típico de {nome} serem {caracteristica}.`,
+      `A personalidade de {nome} é {caracteristica}.`,
+      `Quem conhece {nome} sabe que são {caracteristica}.`,
+      `{nome} frequentemente demonstram ser {caracteristica}.`
+    ];
+    
+    // Escolher um template aleatório
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    
+    // Preencher o template com o nome e a característica
+    return template
+      .replace('{nome}', nome)
+      .replace('{caracteristica}', caracteristica);
+  }, [categoria, obterCaracteristicaAleatoria]);
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
@@ -335,6 +389,10 @@ export default function AINameGenerator({
         <div className="mt-6">
           <NomeDisplay 
             nome={nomesGerados[novoNomeIndex].nome} 
+            caracteristica={categoria === 'pets' 
+              ? getDescricaoPersonalizada(nomesGerados[novoNomeIndex].nome, nomesGerados[novoNomeIndex].tipo) 
+              : undefined
+            }
             onGerarNovo={mostrarProximoNome}
             corDestaque="text-purple-500 dark:text-purple-400" 
             mostrarAnuncio={false}
