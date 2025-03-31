@@ -379,53 +379,53 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
   brasileiro: [
     {
       nome: "Helena",
-      significado: "luz brilhante, tocha, raio de sol",
-      caracteristica: "Costumam ser iluminadas e alegres"
+      significado: "tocha, reluzente, brilhante",
+      caracteristica: "Têm uma luz própria que encanta"
     },
     {
       nome: "Alice",
-      significado: "verdade, nobreza",
-      caracteristica: "Têm imaginação fértil"
+      significado: "de nobre linhagem, verdadeira",
+      caracteristica: "São curiosas e têm sede de aprender"
     },
     {
       nome: "Valentina",
-      significado: "forte, saudável, valente",
-      caracteristica: "São corajosas desde pequenas"
+      significado: "valente, forte, cheia de saúde",
+      caracteristica: "Mostram força e coragem em tudo"
     },
     {
       nome: "Laura",
-      significado: "loureiro, coroada de louros",
-      caracteristica: "Mostram determinação em seus objetivos"
+      significado: "vitoriosa, triunfante, coroada com louros",
+      caracteristica: "São decididas e confiantes"
     },
     {
       nome: "Sophia",
       significado: "sabedoria",
-      caracteristica: "Demonstram inteligência aguçada"
+      caracteristica: "Adoram resolver mistérios"
     },
     {
       nome: "Isabella",
       significado: "consagrada a Deus",
-      caracteristica: "Costumam ser observadoras"
+      caracteristica: "Têm espírito sensível e generoso"
     },
     {
       nome: "Manuela",
       significado: "Deus está conosco",
-      caracteristica: "Gostam de estar perto de quem amam"
+      caracteristica: "Demonstram empatia com facilidade"
     },
     {
       nome: "Júlia",
-      significado: "jovem, cheia de juventude",
-      caracteristica: "Mantêm espírito alegre e leve"
+      significado: "jovem, fofa, cheia de juventude",
+      caracteristica: "Têm alma leve e divertida"
     },
     {
       nome: "Heloísa",
-      significado: "guerreira famosa, saudável",
-      caracteristica: "São comunicativas e expressivas"
+      significado: "guerreira famosa",
+      caracteristica: "São persistentes e fortes"
     },
     {
       nome: "Lívia",
-      significado: "invejada, pálida",
-      caracteristica: "Têm personalidade magnética"
+      significado: "pálida, clara, luminosa",
+      caracteristica: "Têm alma serena"
     },
     {
       nome: "Maria",
@@ -434,13 +434,13 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Cecília",
-      significado: "que não enxerga sua própria beleza",
-      caracteristica: "Têm talentos artísticos"
+      significado: "cego, mas também associado a sabedoria",
+      caracteristica: "São doces e muito observadoras"
     },
     {
       nome: "Lorena",
-      significado: "a laureada, coroada com louros",
-      caracteristica: "Possuem refinamento natural"
+      significado: "natural da cidade de Lorraine",
+      caracteristica: "Têm espírito guerreiro"
     },
     {
       nome: "Eloá",
@@ -449,18 +449,18 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Giovanna",
-      significado: "presente de Deus, agraciada por Deus",
-      caracteristica: "Mostram gentileza em pequenos gestos"
+      significado: "Deus é cheio de graça",
+      caracteristica: "Têm um coração enorme"
     },
     {
       nome: "Maria Luísa",
       significado: "guerreira ilustre, combatente gloriosa",
-      caracteristica: "Defendem seus ideais com firmeza"
+      caracteristica: "Têm talento para liderar"
     },
     {
       nome: "Beatriz",
       significado: "aquela que traz felicidade",
-      caracteristica: "Costumam trazer clima leve aos ambientes"
+      caracteristica: "Têm facilidade em fazer os outros sorrirem"
     },
     {
       nome: "Maria Júlia",
@@ -474,8 +474,103 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Antonella",
-      significado: "inestimável, digna de apreço",
-      caracteristica: "São valorizadas por sua autenticidade"
+      significado: "valiosa, de valor inestimável",
+      caracteristica: "São determinadas e encantadoras"
+    },
+    {
+      nome: "Luna",
+      significado: "lua",
+      caracteristica: "Carregam um ar misterioso e doce"
+    },
+    {
+      nome: "Aurora",
+      significado: "amanhecer, o nascer do sol",
+      caracteristica: "São otimistas por natureza"
+    },
+    {
+      nome: "Bianca",
+      significado: "branca, pura",
+      caracteristica: "Gostam de harmonia e beleza"
+    },
+    {
+      nome: "Rebeca",
+      significado: "aquela que une, presa com força",
+      caracteristica: "Costumam ser protetoras"
+    },
+    {
+      nome: "Melissa",
+      significado: "abelha, doce como o mel",
+      caracteristica: "Têm uma energia contagiante"
+    },
+    {
+      nome: "Clara",
+      significado: "brilhante, ilustre, clara",
+      caracteristica: "Passam paz com sua presença"
+    },
+    {
+      nome: "Yasmin",
+      significado: "jasmim, flor perfumada",
+      caracteristica: "Gostam de agradar quem amam"
+    },
+    {
+      nome: "Mirella",
+      significado: "maravilhosa, admirável",
+      caracteristica: "Têm um charme delicado"
+    },
+    {
+      nome: "Camila",
+      significado: "mensageira dos deuses, aquela que está a serviço",
+      caracteristica: "São fiéis e dedicadas"
+    },
+    {
+      nome: "Alana",
+      significado: "bela, harmoniosa",
+      caracteristica: "Costumam ser livres e criativas"
+    },
+    {
+      nome: "Ayla",
+      significado: "luz da lua, aurora, luar",
+      caracteristica: "Têm um ar místico e encantador"
+    },
+    {
+      nome: "Nicole",
+      significado: "vitoriosa, povo vencedor",
+      caracteristica: "Demonstram liderança desde cedo"
+    },
+    {
+      nome: "Stella",
+      significado: "estrela",
+      caracteristica: "Brilham por onde passam"
+    },
+    {
+      nome: "Maya",
+      significado: "água, mãe, ilusão",
+      caracteristica: "Gostam de explorar o novo"
+    },
+    {
+      nome: "Elisa",
+      significado: "Deus é juramento, prometida de Deus",
+      caracteristica: "Costumam ser muito justas"
+    },
+    {
+      nome: "Nina",
+      significado: "menina, graciosa",
+      caracteristica: "São afetuosas e divertidas"
+    },
+    {
+      nome: "Selena",
+      significado: "deusa da lua, luminosa",
+      caracteristica: "Têm personalidade marcante"
+    },
+    {
+      nome: "Isis",
+      significado: "rainha do trono, poderosa",
+      caracteristica: "São decididas e inspiradoras"
+    },
+    {
+      nome: "Amora",
+      significado: "nome de fruta (doce e delicada)",
+      caracteristica: "Costumam ser doces e únicas"
     },
   ],
   internacional: [
@@ -486,8 +581,8 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Olivia",
-      significado: "paz, oliva, oliveira",
-      caracteristica: "Têm capacidade pacificadora"
+      significado: "oliveira, paz",
+      caracteristica: "Mostram calma e elegância natural"
     },
     {
       nome: "Ava",
@@ -516,8 +611,8 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Evelyn",
-      significado: "vida, vivacidade",
-      caracteristica: "Transmitem vitalidade"
+      significado: "desejo, vida, luz",
+      caracteristica: "Têm olhar sensível ao mundo"
     },
     {
       nome: "Abigail",
@@ -537,7 +632,7 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     {
       nome: "Sofia",
       significado: "sabedoria",
-      caracteristica: "Mostram maturidade emocional"
+      caracteristica: "Inteligentes e questionadoras"
     },
     {
       nome: "Avery",
@@ -553,6 +648,41 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
       nome: "Madison",
       significado: "filha de Matthew, presente poderoso",
       caracteristica: "São fortes e resilientes"
+    },
+    {
+      nome: "Penélope",
+      significado: "tecelã, fiel esposa",
+      caracteristica: "São fiéis e determinadas"
+    },
+    {
+      nome: "Amélie",
+      significado: "trabalhadora, ativa",
+      caracteristica: "Têm um jeito único de ver o mundo"
+    },
+    {
+      nome: "Zoe",
+      significado: "vida",
+      caracteristica: "Têm espírito vibrante"
+    },
+    {
+      nome: "Annelise",
+      significado: "combinação de 'cheia de graça' e 'consagrada a Deus'",
+      caracteristica: "Graciosas e fortes"
+    },
+    {
+      nome: "Emilly",
+      significado: "rival, emulação, trabalhadora",
+      caracteristica: "Têm espírito doce e sensível"
+    },
+    {
+      nome: "Nathalia",
+      significado: "nascimento, renascimento",
+      caracteristica: "São cheias de entusiasmo"
+    },
+    {
+      nome: "Kiara",
+      significado: "clara, brilhante",
+      caracteristica: "São criativas e sonhadoras"
     },
   ],
   classico: [
@@ -579,7 +709,7 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     {
       nome: "Juliana",
       significado: "jovem, cheia de juventude",
-      caracteristica: "Mantêm energia jovial"
+      caracteristica: "São sonhadoras com os pés no chão"
     },
     {
       nome: "Márcia",
@@ -607,19 +737,14 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
       caracteristica: "São protetoras por natureza"
     },
     {
-      nome: "Camila",
-      significado: "mensageira, jovem assistente em rituais",
-      caracteristica: "Gostam de ajudar outros"
+      nome: "Bruna",
+      significado: "morena, de pele escura",
+      caracteristica: "Demonstram firmeza e afeto"
     },
     {
       nome: "Amanda",
       significado: "digna de amor, amável",
       caracteristica: "Despertam afeto espontâneo"
-    },
-    {
-      nome: "Bruna",
-      significado: "marrom, morena",
-      caracteristica: "Têm personalidade acolhedora"
     },
     {
       nome: "Jéssica",
@@ -628,8 +753,8 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Letícia",
-      significado: "alegria, felicidade",
-      caracteristica: "Espalham bom humor"
+      significado: "alegria, prazer, deleite",
+      caracteristica: "Espalham alegria por onde passam"
     },
     {
       nome: "Simone",
@@ -653,8 +778,183 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
     },
     {
       nome: "Clarice",
-      significado: "ilustre, famosa, brilhante",
-      caracteristica: "Demonstram clareza de pensamento"
+      significado: "brilhante, ilustre",
+      caracteristica: "Costumam ser muito inteligentes"
+    },
+    {
+      nome: "Eva",
+      significado: "vida, a que dá vida",
+      caracteristica: "São determinadas e leais"
+    },
+    {
+      nome: "Rafaela",
+      significado: "curada por Deus",
+      caracteristica: "São protetoras naturais"
+    },
+    {
+      nome: "Milena",
+      significado: "trabalhadora, graciosa",
+      caracteristica: "São doces e determinadas"
+    },
+    {
+      nome: "Jade",
+      significado: "pedra preciosa, a que tem valor",
+      caracteristica: "São intensas e decididas"
+    },
+    {
+      nome: "Emanuela",
+      significado: "Deus está conosco",
+      caracteristica: "Transmitem segurança e carinho"
+    },
+    {
+      nome: "Bárbara",
+      significado: "estrangeira, forasteira",
+      caracteristica: "Mostram personalidade forte"
+    },
+    {
+      nome: "Noemi",
+      significado: "agradável, amável",
+      caracteristica: "Têm espírito acolhedor"
+    },
+    {
+      nome: "Aurélia",
+      significado: "dourada, reluzente",
+      caracteristica: "Têm brilho nobre"
+    },
+    {
+      nome: "Yara",
+      significado: "senhora das águas",
+      caracteristica: "Encantam com sua presença"
+    },
+    {
+      nome: "Agnes",
+      significado: "pura, santa",
+      caracteristica: "Têm pureza no coração"
+    },
+    {
+      nome: "Alícia",
+      significado: "nobre, verdadeira",
+      caracteristica: "Gostam de organizar tudo"
+    },
+    {
+      nome: "Chiara",
+      significado: "clara, luminosa",
+      caracteristica: "Espalham luz com o sorriso"
+    },
+    {
+      nome: "Lara",
+      significado: "protetora, alegre",
+      caracteristica: "São serenas e confiáveis"
+    },
+    {
+      nome: "Cristal",
+      significado: "transparente, pura como cristal",
+      caracteristica: "Valorizam a beleza interior"
+    },
+    {
+      nome: "Olga",
+      significado: "santa, abençoada",
+      caracteristica: "Têm um olhar profundo"
+    },
+    {
+      nome: "Flor",
+      significado: "flor, bela flor",
+      caracteristica: "Simbolizam delicadeza"
+    },
+    {
+      nome: "Talita",
+      significado: "menina, criança",
+      caracteristica: "Têm ternura no olhar"
+    },
+    {
+      nome: "Sabrina",
+      significado: "princesa, fronteira",
+      caracteristica: "Têm espírito romântico"
+    },
+    {
+      nome: "Sol",
+      significado: "sol, luz, energia vital",
+      caracteristica: "Têm energia vibrante"
+    },
+    {
+      nome: "Violeta",
+      significado: "flor roxa, pequena violeta",
+      caracteristica: "Têm alma artística"
+    },
+    {
+      nome: "Siena",
+      significado: "laranja-avermelhado, referência à cidade italiana",
+      caracteristica: "Elegantes e misteriosas"
+    },
+    {
+      nome: "Betina",
+      significado: "prometida a Deus",
+      caracteristica: "Têm atitude e charme"
+    },
+    {
+      nome: "Manuella",
+      significado: "Deus está conosco",
+      caracteristica: "Sabem acolher como ninguém"
+    },
+    {
+      nome: "Thalita",
+      significado: "menina, jovem mulher",
+      caracteristica: "São leves e afetuosas"
+    },
+    {
+      nome: "Adélia",
+      significado: "nobre, gentil",
+      caracteristica: "Têm beleza clássica"
+    },
+    {
+      nome: "Malu",
+      significado: "junção de Maria + Luísa ('amada guerreira')",
+      caracteristica: "Espontâneas e alegres"
+    },
+    {
+      nome: "Marina",
+      significado: "do mar, marinha",
+      caracteristica: "Gostam de tranquilidade e poesia"
+    },
+    {
+      nome: "Hadassa",
+      significado: "murta, compaixão",
+      caracteristica: "Têm fé e coragem"
+    },
+    {
+      nome: "Nayara",
+      significado: "lugar entre as rochas, de origem incerta",
+      caracteristica: "Têm espírito livre"
+    },
+    {
+      nome: "Selma",
+      significado: "protetora, divina capacitada",
+      caracteristica: "Têm coração acolhedor"
+    },
+    {
+      nome: "Hana",
+      significado: "graça, favor",
+      caracteristica: "Têm ternura no sorriso"
+    },
+    {
+      nome: "Tâmara",
+      significado: "palmeira, fruto doce",
+      caracteristica: "Têm energia maternal"
+    },
+    {
+      nome: "Ingrid",
+      significado: "beleza, fertilidade",
+      caracteristica: "Determinação é seu sobrenome"
+    },
+    {
+      nome: "Lana",
+      significado: "suave, rocha, harmonia",
+      caracteristica: "Leves como a brisa"
+    },
+    {
+      nome: "Kaline",
+      significado: "variação moderna, 'mulher pura' (associado a Kalina)",
+      caracteristica: "Têm criatividade sem limites"
     },
   ]
 };
@@ -926,39 +1226,39 @@ export default function Bebes() {
 
               {modoGerador === 'tradicional' ? (
                 <>
-                  <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                    Gênero
-                  </label>
-                  <div className="flex gap-4 mb-6">
-                    <button 
-                      className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                      onClick={() => setGenero('menino')}
-                    >
-                      Menino
-                    </button>
-                    <button 
-                      className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menina' 
-                        ? 'bg-pink-500 text-white' 
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                      onClick={() => setGenero('menina')}
-                    >
-                      Menina
-                    </button>
-                  </div>
-                  
-                  <button 
+              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                Gênero
+              </label>
+              <div className="flex gap-4 mb-6">
+                <button 
+                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setGenero('menino')}
+                >
+                  Menino
+                </button>
+                <button 
+                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menina' 
+                    ? 'bg-pink-500 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setGenero('menina')}
+                >
+                  Menina
+                </button>
+              </div>
+              
+                <button 
                     className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
-                      genero === 'menino' 
-                        ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                        : 'bg-pink-500 hover:bg-pink-600 text-white'
-                    }`}
-                    onClick={gerarNome}
-                    disabled={isGenerating}
-                  >
-                    {isGenerating ? 'Gerando...' : 'Gerar Nome'}
-                  </button>
+                genero === 'menino' 
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                  : 'bg-pink-500 hover:bg-pink-600 text-white'
+              }`}
+              onClick={gerarNome}
+              disabled={isGenerating}
+            >
+              {isGenerating ? 'Gerando...' : 'Gerar Nome'}
+            </button>
                 </>
               ) : (
                 <AINameGenerator 
