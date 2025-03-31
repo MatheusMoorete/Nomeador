@@ -13,10 +13,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verificar se devemos usar os nomes de fallback diretamente
+    if (process.env.USE_FALLBACK_NAMES === 'true') {
+      // Importar diretamente a função para evitar chamadas de API desnecessárias
+      const { getFallbackNames } = await import('@/services/aiNameGenerator');
+      return NextResponse.json({
+        names: getFallbackNames(options),
+        source: 'fallback'
+      });
+    }
+
     // Obtenha a chave da API do ambiente
-    const apiKey = process.env.OPENAI_API_KEY;
-    const apiUrl = process.env.OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
-    const model = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
+    const apiKey = process.env.HUGGINGFACE_API_KEY;
+    const apiUrl = process.env.HUGGINGFACE_API_URL || 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
     
     if (!apiKey) {
       console.error("API key não configurada no ambiente");
@@ -26,63 +35,59 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Chamada para a API OpenAI
-    const openAIResponse = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          {
-            role: 'system',
-            content: 'Você é um especialista em criar nomes criativos, originais e adequados para várias finalidades. Responda apenas em formato JSON.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.8,
-        max_tokens: 500
-      })
-    });
-
-    if (!openAIResponse.ok) {
-      const errorData = await openAIResponse.json();
-      console.error("Erro na chamada OpenAI:", errorData);
-      return NextResponse.json(
-        { error: 'Erro na API externa', details: errorData },
-        { status: 502 }
-      );
-    }
-
-    const data = await openAIResponse.json();
-    
-    // Processando a resposta da OpenAI
+    // Chamada para a API da Hugging Face
     try {
-      // Extrair o texto da resposta
-      const responseText = data.choices[0]?.message?.content || '';
-      
-      // Tentar extrair o JSON da resposta
-      const jsonMatch = responseText.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-      
-      if (jsonMatch) {
-        const jsonContent = JSON.parse(jsonMatch[0]);
-        return NextResponse.json({ names: Array.isArray(jsonContent) ? jsonContent : [jsonContent] });
-      } else {
-        // Fallback para processar texto sem formato JSON
-        const processedNames = processTextResponse(responseText, options);
-        return NextResponse.json({ names: processedNames });
+      const huggingFaceResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          inputs: formatPrompt(prompt),
+          parameters: {
+            max_new_tokens: 250,
+            temperature: 0.7,
+            top_p: 0.9,
+            do_sample: true
+          }
+        })
+      });
+
+      if (!huggingFaceResponse.ok) {
+        throw new Error(`Erro na API: ${huggingFaceResponse.status}`);
       }
-    } catch (parseError) {
-      console.error("Erro ao processar resposta:", parseError);
-      return NextResponse.json(
-        { error: 'Falha ao processar resposta', rawResponse: data.choices[0]?.message?.content },
-        { status: 500 }
-      );
+
+      const data = await huggingFaceResponse.json();
+      
+      // Processando a resposta da Hugging Face
+      try {
+        // Extrair o texto da resposta
+        const responseText = Array.isArray(data) 
+          ? data[0]?.generated_text || '' 
+          : data.generated_text || '';
+        
+        // Extrair os nomes da resposta de texto
+        const results = processHuggingFaceResponse(responseText, options);
+        
+        return NextResponse.json({
+          names: results,
+          source: 'huggingface'
+        });
+      } catch (parseError) {
+        console.error("Erro ao processar resposta:", parseError);
+        throw parseError;
+      }
+    } catch (apiError) {
+      console.error("Erro na chamada à API:", apiError);
+      
+      // Fallback para nomes estáticos em caso de erro
+      const { getFallbackNames } = await import('@/services/aiNameGenerator');
+      return NextResponse.json({
+        names: getFallbackNames(options),
+        source: 'fallback',
+        error: 'Erro na API externa, usando nomes locais'
+      });
     }
   } catch (error) {
     console.error("Erro no servidor:", error);
@@ -94,18 +99,38 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Processa texto não estruturado e extrai nomes
+ * Formata o prompt para o formato que o Mistral espera
  */
-function processTextResponse(text: string, options: NameGenerationOptions) {
-  // Processa texto não formatado para tentar extrair nomes
-  const lines = text.split('\n').filter(line => line.trim() !== '');
+function formatPrompt(prompt: string): string {
+  return `<s>[INST] Você é um especialista em criar nomes criativos e originais.
   
+${prompt}
+
+Por favor, liste cada nome em uma linha separada, no formato:
+Nome - Significado - Origem
+[/INST]</s>`;
+}
+
+/**
+ * Processa a resposta do Hugging Face para extrair nomes, significados e origens
+ */
+function processHuggingFaceResponse(text: string, options: NameGenerationOptions) {
+  // Remover o prompt da resposta (se estiver presente)
+  const promptEnd = text.indexOf('[/INST]');
+  const cleanedText = promptEnd > -1 ? text.substring(promptEnd + 8) : text;
+  
+  // Dividir por linhas e filtrar linhas vazias ou muito curtas
+  const lines = cleanedText.split('\n')
+    .filter(line => line.trim().length > 3 && line.includes('-'));
+  
+  // Processar cada linha para extrair nomes
   return lines.map(line => {
-    const nameParts = line.split('-').map(part => part.trim());
+    const parts = line.split('-').map(part => part.trim());
+    
     return {
-      nome: nameParts[0] || 'Nome não identificado',
-      significado: nameParts[1] || 'Significado desconhecido',
-      origem: nameParts[2] || 'Origem desconhecida'
+      nome: parts[0] || 'Nome não identificado',
+      significado: parts[1] || 'Significado desconhecido',
+      origem: parts[2] || 'Origem desconhecida'
     };
-  });
+  }).filter(name => name.nome !== 'Nome não identificado');
 } 
