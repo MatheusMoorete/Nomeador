@@ -959,6 +959,405 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
   ]
 };
 
+// Nova lista para nomes neutros
+const nomesNeutrosCompletos: NomeCompleto[] = [
+  {
+    nome: "Alex",
+    significado: "defensor da humanidade",
+    caracteristica: "São versáteis e adaptáveis"
+  },
+  {
+    nome: "Noah",
+    significado: "descanso, paz, consolo",
+    caracteristica: "Têm espírito calmo e conciliador"
+  },
+  {
+    nome: "Jordan",
+    significado: "aquele que desce, fluir",
+    caracteristica: "Costumam ser criativos e originais"
+  },
+  {
+    nome: "Adrian",
+    significado: "natural da região do mar Adriático",
+    caracteristica: "Gostam de desafios mentais"
+  },
+  {
+    nome: "Cauã",
+    significado: "gavião",
+    caracteristica: "Ligados à natureza e liberdade"
+  },
+  {
+    nome: "Yuri",
+    significado: "agricultor, trabalhador da terra",
+    caracteristica: "São observadores e sensíveis"
+  },
+  {
+    nome: "Gael",
+    significado: "belo e generoso, protegido",
+    caracteristica: "Têm empatia como traço marcante"
+  },
+  {
+    nome: "Andréi",
+    significado: "másculo, viril, valente",
+    caracteristica: "Costumam ser discretos e inteligentes"
+  },
+  {
+    nome: "Tay",
+    significado: "diminutivo de Taylor ou Taylor Swift",
+    caracteristica: "Têm espírito leve e criativo"
+  },
+  {
+    nome: "Davi",
+    significado: "amado, querido",
+    caracteristica: "São carinhosos e afetuosos"
+  },
+  {
+    nome: "Sam",
+    significado: "diminutivo de Samuel ou Samantha, 'Deus ouve'",
+    caracteristica: "Têm personalidade forte e carismática"
+  },
+  {
+    nome: "Ravi",
+    significado: "Sol, luz (em sânscrito)",
+    caracteristica: "Inspiram calma e sabedoria"
+  },
+  {
+    nome: "Chris",
+    significado: "diminutivo de Christian/Christina, 'seguidor de Cristo'",
+    caracteristica: "São comunicativos e sociáveis"
+  },
+  {
+    nome: "Nico",
+    significado: "povo vencedor",
+    caracteristica: "Têm alma livre e divertida"
+  },
+  {
+    nome: "Dani",
+    significado: "diminutivo de Daniel/Daniela, 'Deus é meu juiz'",
+    caracteristica: "Gostam de escutar e apoiar"
+  },
+  {
+    nome: "Ariel",
+    significado: "leão de Deus",
+    caracteristica: "Têm energia mística e inspiradora"
+  },
+  {
+    nome: "Zion",
+    significado: "terra prometida, refúgio",
+    caracteristica: "Buscam equilíbrio e paz"
+  },
+  {
+    nome: "Eli",
+    significado: "elevado, ascensão",
+    caracteristica: "São doces e introspectivos"
+  },
+  {
+    nome: "Jean",
+    significado: "Deus é cheio de graça",
+    caracteristica: "Demonstram calma e firmeza"
+  },
+  {
+    nome: "Kai",
+    significado: "mar (havaiano), força (nórdico)",
+    caracteristica: "Têm espírito livre e espontâneo"
+  },
+  {
+    nome: "René",
+    significado: "renascido, nascido de novo",
+    caracteristica: "Gostam de recomeços e transformações"
+  },
+  {
+    nome: "Loren",
+    significado: "natural de Laurento",
+    caracteristica: "Elegantes e discretos"
+  },
+  {
+    nome: "Morgan",
+    significado: "nascido do mar",
+    caracteristica: "Têm personalidade forte e enigmática"
+  },
+  {
+    nome: "Ashley",
+    significado: "clareira das cinzas",
+    caracteristica: "São doces e confiantes"
+  },
+  {
+    nome: "Sasha",
+    significado: "diminutivo de Alexander(a), 'defensor(a) da humanidade'",
+    caracteristica: "Têm brilho e coragem"
+  },
+  {
+    nome: "Alexis",
+    significado: "protetor(a), defensor(a)",
+    caracteristica: "Inteligentes e estratégicos"
+  },
+  {
+    nome: "Jules",
+    significado: "diminutivo de Julia/Julian, 'jovem', 'macio'",
+    caracteristica: "Gostam de arte e literatura"
+  },
+  {
+    nome: "Marin",
+    significado: "do mar, marinho",
+    caracteristica: "São calmos e observadores"
+  },
+  {
+    nome: "Rowan",
+    significado: "pequeno ruivo, árvore encantada",
+    caracteristica: "Têm força e delicadeza"
+  },
+  {
+    nome: "Sky",
+    significado: "céu, alto",
+    caracteristica: "Sonhadores por natureza"
+  },
+  {
+    nome: "Taylor",
+    significado: "alfaiate",
+    caracteristica: "Têm senso prático e criatividade"
+  },
+  {
+    nome: "Cam",
+    significado: "diminutivo de Cameron, 'nariz torto', mas hoje neutro moderno",
+    caracteristica: "São discretos e carismáticos"
+  },
+  {
+    nome: "Logan",
+    significado: "pequena caverna, descendente",
+    caracteristica: "Têm personalidade firme e marcante"
+  },
+  {
+    nome: "Blair",
+    significado: "campo, planície",
+    caracteristica: "Transmitem elegância"
+  },
+  {
+    nome: "Charlie",
+    significado: "diminutivo de Charles/Charlotte, 'homem livre'",
+    caracteristica: "Têm senso de humor e leveza"
+  },
+  {
+    nome: "Luan",
+    significado: "luar, guerreiro",
+    caracteristica: "São serenos e introspectivos"
+  },
+  {
+    nome: "Andrea",
+    significado: "valente, másculo, corajoso",
+    caracteristica: "Gostam de ajudar e acolher"
+  },
+  {
+    nome: "Emery",
+    significado: "poderoso, líder da casa",
+    caracteristica: "São persistentes e inovadores"
+  },
+  {
+    nome: "Phoenix",
+    significado: "ave mítica que renasce das cinzas",
+    caracteristica: "Têm espírito resiliente"
+  },
+  {
+    nome: "Robin",
+    significado: "brilhante, fama brilhante",
+    caracteristica: "Têm coragem e senso de justiça"
+  },
+  {
+    nome: "Toni",
+    significado: "diminutivo de Antônio ou Antônia, 'valioso'",
+    caracteristica: "São intuitivos e diretos"
+  },
+  {
+    nome: "Ezra",
+    significado: "ajuda, protetor",
+    caracteristica: "Gostam de tranquilidade e sabedoria"
+  },
+  {
+    nome: "Reese",
+    significado: "entusiasmo, ardor",
+    caracteristica: "São determinados e organizados"
+  },
+  {
+    nome: "Alexi",
+    significado: "variação de Alexis, 'defensor(a)'",
+    caracteristica: "Carregam força e gentileza"
+  },
+  {
+    nome: "Mika",
+    significado: "quem é como Deus?",
+    caracteristica: "Têm olhar doce e curioso"
+  },
+  {
+    nome: "Alden",
+    significado: "amigo velho, sábio conselheiro",
+    caracteristica: "Gostam de compartilhar conhecimento"
+  },
+  {
+    nome: "Skyler",
+    significado: "erudito, acadêmico",
+    caracteristica: "Têm mente inquieta e criativa"
+  },
+  {
+    nome: "Remy",
+    significado: "navegador, da região de Reims",
+    caracteristica: "Têm uma presença marcante"
+  },
+  {
+    nome: "Rio",
+    significado: "rio, fluidez",
+    caracteristica: "Têm espírito aventureiro"
+  },
+  {
+    nome: "Casey",
+    significado: "valente em batalha",
+    caracteristica: "Gostam de resolver conflitos"
+  },
+  {
+    nome: "Jesse",
+    significado: "presente de Deus",
+    caracteristica: "Têm aura tranquila e forte"
+  },
+  {
+    nome: "Avery",
+    significado: "governante dos elfos",
+    caracteristica: "Têm essência doce e determinada"
+  },
+  {
+    nome: "Lou",
+    significado: "diminutivo de Louise/Louis, 'guerreiro famoso'",
+    caracteristica: "São simples e encantadores"
+  },
+  {
+    nome: "Ciel",
+    significado: "céu (francês)",
+    caracteristica: "Têm alma sensível e poética"
+  },
+  {
+    nome: "Dakota",
+    significado: "amigo, aliado (povo nativo americano)",
+    caracteristica: "Gostam de união e conexão"
+  },
+  {
+    nome: "Eden",
+    significado: "paraíso, lugar de delícias",
+    caracteristica: "Têm doçura natural"
+  },
+  {
+    nome: "Lior",
+    significado: "minha luz, luz para mim (hebraico)",
+    caracteristica: "Brilham de forma sutil"
+  },
+  {
+    nome: "Noel",
+    significado: "nascimento, Natal",
+    caracteristica: "Têm espírito festivo"
+  },
+  {
+    nome: "Ocean",
+    significado: "oceano",
+    caracteristica: "Têm alma profunda e misteriosa"
+  },
+  {
+    nome: "Parker",
+    significado: "guardião do parque, cuidador",
+    caracteristica: "Práticos e protetores"
+  },
+  {
+    nome: "Rory",
+    significado: "rei vermelho, corajoso",
+    caracteristica: "Gostam de aventura"
+  },
+  {
+    nome: "Sage",
+    significado: "sábio, planta medicinal",
+    caracteristica: "Têm sabedoria além da idade"
+  },
+  {
+    nome: "Shiloh",
+    significado: "tranquilo, pacífico, dádiva",
+    caracteristica: "Têm uma calma inspiradora"
+  },
+  {
+    nome: "Téa",
+    significado: "diminutivo de Dorotea, 'presente de Deus'",
+    caracteristica: "Transmitem leveza"
+  },
+  {
+    nome: "Tami",
+    significado: "palmeira, alegria",
+    caracteristica: "São criativos e afetuosos"
+  },
+  {
+    nome: "Valen",
+    significado: "diminutivo de Valentina ou Valentim, 'forte', 'valente'",
+    caracteristica: "São sonhadores com pé no chão"
+  },
+  {
+    nome: "Zuri",
+    significado: "belo, bonito (africano)",
+    caracteristica: "Têm energia vibrante"
+  },
+  {
+    nome: "Indi",
+    significado: "diminutivo de Indigo ou India, 'cor do anil', 'país'",
+    caracteristica: "Têm espírito livre"
+  },
+  {
+    nome: "Ren",
+    significado: "flor de lótus (japonês)",
+    caracteristica: "Gostam da simplicidade"
+  },
+  {
+    nome: "Neo",
+    significado: "novo",
+    caracteristica: "Têm mente futurista"
+  },
+  {
+    nome: "Eliah",
+    significado: "variação de Elias, 'meu Deus é Jeová'",
+    caracteristica: "Têm força espiritual"
+  },
+  {
+    nome: "Lennon",
+    significado: "amante, amigo querido",
+    caracteristica: "São calmos e pensativos"
+  },
+  {
+    nome: "Storm",
+    significado: "tempestade, força da natureza",
+    caracteristica: "Têm energia intensa"
+  },
+  {
+    nome: "Tris",
+    significado: "diminutivo de Tristan ou Trishelle",
+    caracteristica: "Têm foco e disciplina"
+  },
+  {
+    nome: "Wren",
+    significado: "pássaro pequeno (em inglês)",
+    caracteristica: "Têm delicadeza e astúcia"
+  },
+  {
+    nome: "Gray",
+    significado: "cinza, equilíbrio",
+    caracteristica: "Discretos e estilosos"
+  },
+  {
+    nome: "Aven",
+    significado: "bela flor (irlandês)",
+    caracteristica: "Têm alma contemplativa"
+  },
+  {
+    nome: "Lane",
+    significado: "pequeno caminho",
+    caracteristica: "Gostam de caminhar em silêncio"
+  },
+  {
+    nome: "Zephyr",
+    significado: "vento oeste, brisa suave",
+    caracteristica: "Têm leveza e originalidade"
+  }
+];
+
 // Verificar e filtrar qualquer nome sem significado ou característica
 const filtrarNomesCompletos = (lista: NomeCompleto[]): NomeCompleto[] => {
   return lista.filter(item => 
@@ -983,6 +1382,9 @@ const nomesMeninaCompletasFiltradas = {
   classico: filtrarNomesCompletos(nomesMeninaCompletas.classico)
 };
 
+// Filtrar os nomes neutros
+const nomesNeutrosCompletosFiltrados = filtrarNomesCompletos(nomesNeutrosCompletos);
+
 // Manter as listas originais de nomes simples para compatibilidade
 const nomesMenino = {
   brasileiro: nomesMeninoCompletosFiltrados.brasileiro.map(item => item.nome),
@@ -996,6 +1398,9 @@ const nomesMenina = {
   internacional: nomesMeninaCompletasFiltradas.internacional.map(item => item.nome),
   classico: nomesMeninaCompletasFiltradas.classico.map(item => item.nome)
 };
+
+// Lista de nomes neutros simples
+const nomesNeutro = nomesNeutrosCompletosFiltrados.map(item => item.nome);
 
 // Função para verificar integridade dos dados - apenas para desenvolvimento
 if (process.env.NODE_ENV !== 'production') {
@@ -1035,6 +1440,15 @@ if (process.env.NODE_ENV !== 'production') {
       });
     });
     
+    // Verificar nomes neutros
+    nomesNeutro.forEach(nome => {
+      const temDadosCompletos = nomesNeutrosCompletosFiltrados.some(item => item.nome === nome);
+      if (!temDadosCompletos) {
+        console.warn(`Nome neutro sem dados completos: ${nome}`);
+        nomesSemDados++;
+      }
+    });
+    
     if (nomesSemDados === 0) {
       console.log("✅ Todos os nomes possuem dados completos!");
     } else {
@@ -1058,13 +1472,15 @@ export default function Bebes() {
   const [nomesAnteriores, setNomesAnteriores] = useState<{nome: string; significado?: string; caracteristica?: string}[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [modoGerador, setModoGerador] = useState<'tradicional' | 'ia'>('tradicional');
-  // Novo estado para controlar nomes já utilizados (separados por gênero)
+  // Atualizar estado para incluir gênero neutro
   const [nomesUtilizados, setNomesUtilizados] = useState<{
     menino: string[],
-    menina: string[]
+    menina: string[],
+    neutro: string[]
   }>({
     menino: [],
-    menina: []
+    menina: [],
+    neutro: []
   });
 
   const obterNomeCompleto = (nome: string): NomeCompleto | undefined => {
@@ -1074,6 +1490,9 @@ export default function Bebes() {
     } else if (genero === 'menina') {
       const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
       return nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
+    } else if (genero === 'neutro') {
+      // Para nomes neutros, não há separação por origem
+      return nomesNeutrosCompletosFiltrados.find(item => item.nome === nome);
     }
     return undefined;
   };
@@ -1095,12 +1514,16 @@ export default function Bebes() {
           ...nomesMenino.internacional, 
           ...nomesMenino.classico
         ];
-      } else {
+      } else if (genero === 'menina') {
         listaDeNomes = [
           ...nomesMenina.brasileiro,
           ...nomesMenina.internacional,
           ...nomesMenina.classico
         ];
+      } else if (genero === 'neutro') {
+        // Para nomes neutros, temos apenas uma lista
+        listaDeNomes = nomesNeutro;
+        // Não atualizar a origem para nomes neutros
       }
       
       // Filtrar nomes já utilizados
@@ -1128,25 +1551,26 @@ export default function Bebes() {
       let novoSignificado = '';
       let novaCaracteristica = '';
       
-      // Atualizar a origem para buscar o significado e característica corretos
-      // Tentar encontrar em qual origem o nome está para melhor correspondência
-      const origemDoNome = 
-        (genero === 'menino' && nomesMenino.brasileiro.includes(nome)) ? 'brasileiro' :
-        (genero === 'menino' && nomesMenino.internacional.includes(nome)) ? 'internacional' :
-        (genero === 'menino' && nomesMenino.classico.includes(nome)) ? 'classico' :
-        (genero === 'menina' && nomesMenina.brasileiro.includes(nome)) ? 'brasileiro' :
-        (genero === 'menina' && nomesMenina.internacional.includes(nome)) ? 'internacional' :
-        (genero === 'menina' && nomesMenina.classico.includes(nome)) ? 'classico' :
-        origemAleatoria;
-      
-      setOrigem(origemDoNome);
+      // Atualizar a origem para buscar o significado e característica corretos (exceto para neutro)
+      if (genero !== 'neutro') {
+        // Tentar encontrar em qual origem o nome está para melhor correspondência
+        const origemDoNome = 
+          (genero === 'menino' && nomesMenino.brasileiro.includes(nome)) ? 'brasileiro' :
+          (genero === 'menino' && nomesMenino.internacional.includes(nome)) ? 'internacional' :
+          (genero === 'menino' && nomesMenino.classico.includes(nome)) ? 'classico' :
+          (genero === 'menina' && nomesMenina.brasileiro.includes(nome)) ? 'brasileiro' :
+          (genero === 'menina' && nomesMenina.internacional.includes(nome)) ? 'internacional' :
+          (genero === 'menina' && nomesMenina.classico.includes(nome)) ? 'classico' :
+          origemAleatoria;
+        
+        setOrigem(origemDoNome);
+      }
       
       // Tentar obter o nome completo
-      // Verificar todas as origens para encontrar o nome
       let nomeCompleto = obterNomeCompleto(nome);
       
-      // Se não encontrou na origem detectada, procurar em todas as origens
-      if (!nomeCompleto) {
+      // Se não encontrou na origem detectada e não for neutro, procurar em todas as origens
+      if (!nomeCompleto && genero !== 'neutro') {
         for (const origem of ['brasileiro', 'internacional', 'classico']) {
           if (genero === 'menino') {
             const origemAtual = origem as keyof typeof nomesMeninoCompletosFiltrados;
@@ -1156,7 +1580,7 @@ export default function Bebes() {
               setOrigem(origem);
               break;
             }
-          } else {
+          } else if (genero === 'menina') {
             const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
             const encontrado = nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
             if (encontrado) {
@@ -1175,6 +1599,7 @@ export default function Bebes() {
         // Se não encontrar o nome no banco de dados completo, adicionar valores padrão
         // com base no gênero e origem para garantir que todos os nomes tenham informações
         if (genero === 'menino') {
+          const origemDoNome = origem as keyof typeof nomesMeninoCompletosFiltrados;
           switch(origemDoNome) {
             case 'brasileiro':
               novoSignificado = "nome de origem brasileira";
@@ -1189,7 +1614,8 @@ export default function Bebes() {
               novaCaracteristica = "Possui uma natureza leal e confiável";
               break;
           }
-        } else { // menina
+        } else if (genero === 'menina') {
+          const origemDoNome = origem as keyof typeof nomesMeninaCompletasFiltradas;
           switch(origemDoNome) {
             case 'brasileiro':
               novoSignificado = "nome de origem brasileira";
@@ -1204,32 +1630,12 @@ export default function Bebes() {
               novaCaracteristica = "Possui uma natureza amorosa e atenciosa";
               break;
           }
+        } else if (genero === 'neutro') {
+          novoSignificado = "nome neutro versátil";
+          novaCaracteristica = "Costuma ter personalidade flexível e adaptável";
         }
         
         console.log(`Nome sem dados completos: ${nome}. Adicionado significado e característica padrão.`);
-        
-        // Adicionar o nome à lista completa para uso futuro
-        if (genero === 'menino') {
-          const origemKey = origemDoNome as keyof typeof nomesMeninoCompletosFiltrados;
-          const listaNomesCompletos = [...nomesMeninoCompletosFiltrados[origemKey]];
-          listaNomesCompletos.push({
-            nome,
-            significado: novoSignificado,
-            caracteristica: novaCaracteristica
-          });
-          // Não estamos atualizando a lista original para evitar mutação de estado
-          // Isso é apenas para registro interno
-        } else {
-          const origemKey = origemDoNome as keyof typeof nomesMeninaCompletasFiltradas;
-          const listaNomesCompletos = [...nomesMeninaCompletasFiltradas[origemKey]];
-          listaNomesCompletos.push({
-            nome,
-            significado: novoSignificado,
-            caracteristica: novaCaracteristica
-          });
-          // Não estamos atualizando a lista original para evitar mutação de estado
-          // Isso é apenas para registro interno
-        }
       }
       
       setNomeGerado(nome);
@@ -1299,7 +1705,7 @@ export default function Bebes() {
               <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
                 Gênero
               </label>
-              <div className="flex gap-4 mb-6">
+              <div className="flex flex-wrap gap-2 mb-6">
                 <button 
                   className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
                     ? 'bg-blue-500 text-white' 
@@ -1316,13 +1722,23 @@ export default function Bebes() {
                 >
                   Menina
                 </button>
+                <button 
+                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'neutro' 
+                    ? 'bg-purple-500 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setGenero('neutro')}
+                >
+                  Neutro
+                </button>
               </div>
               
                 <button 
                     className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
                 genero === 'menino' 
                   ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                  : 'bg-pink-500 hover:bg-pink-600 text-white'
+                  : genero === 'menina'
+                    ? 'bg-pink-500 hover:bg-pink-600 text-white'
+                    : 'bg-purple-500 hover:bg-purple-600 text-white'
               }`}
               onClick={gerarNome}
               disabled={isGenerating}
@@ -1333,7 +1749,13 @@ export default function Bebes() {
               ) : (
                 <AINameGenerator 
                   categoria="bebes" 
-                  generoInicial={genero === 'menino' ? 'masculino' : 'feminino'} 
+                  generoInicial={
+                    genero === 'menino' 
+                      ? 'masculino' 
+                      : genero === 'menina' 
+                        ? 'feminino' 
+                        : 'neutro'
+                  } 
                   origemInicial={origem as 'brasileiro' | 'internacional' | 'classico'}
                 />
               )}
@@ -1354,7 +1776,9 @@ export default function Bebes() {
                 onGerarNovo={gerarNome}
                 corDestaque={genero === 'menino' 
                   ? 'text-blue-500 dark:text-blue-400' 
-                  : 'text-pink-500 dark:text-pink-400'}
+                  : genero === 'menina'
+                    ? 'text-pink-500 dark:text-pink-400'
+                    : 'text-purple-500 dark:text-purple-400'}
                 mostrarAnuncio={false}
                 categoria="bebes"
               />
