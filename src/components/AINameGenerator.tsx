@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { GeneratedName, NameGenerationOptions, generateNames } from '@/services/aiNameGenerator';
 import NomeDisplay from './NomeDisplay';
 import { CARACTERISTICAS_PETS, CARACTERISTICAS_GERAIS_PETS } from '@/data/caracteristicasPets';
+import { CARACTERISTICAS_JOGOS, CARACTERISTICAS_GERAIS_JOGOS } from '@/data/caracteristicasJogos';
 
 interface AINameGeneratorProps {
   categoria: 'pets' | 'jogos' | 'bebes' | 'aleatorios';
@@ -31,6 +32,7 @@ export default function AINameGenerator({
   const [inputCaract, setInputCaract] = useState('');
   const [error, setError] = useState('');
   const [tipoPet, setTipoPet] = useState<string>('qualquer');
+  const [tipoJogo, setTipoJogo] = useState<string>('qualquer');
 
   const gerarNomesIA = useCallback(async () => {
     try {
@@ -52,6 +54,15 @@ export default function AINameGenerator({
             `tipo de animal: ${tipoPet}`
           ]
         };
+      } else if (categoria === 'jogos' && tipoJogo !== 'qualquer') {
+        // Adicionar o tipo de jogo como uma característica
+        newOptions = {
+          ...newOptions,
+          caracteristicas: [
+            ...(newOptions.caracteristicas || []),
+            `tipo de jogo: ${tipoJogo}`
+          ]
+        };
       }
       
       const results = await generateNames(newOptions);
@@ -63,7 +74,7 @@ export default function AINameGenerator({
     } finally {
       setIsGenerating(false);
     }
-  }, [options, categoria, tipoPet]);
+  }, [options, categoria, tipoPet, tipoJogo]);
 
   const mostrarProximoNome = useCallback(() => {
     if (novoNomeIndex < nomesGerados.length - 1) {
@@ -93,61 +104,146 @@ export default function AINameGenerator({
 
   // Função para obter uma característica aleatória para o pet gerado
   const obterCaracteristicaAleatoria = useCallback((tipo: string): string => {
-    // Se não é pet, retorna vazio
-    if (categoria !== 'pets') return '';
+    // Se não é pet nem jogo, retorna vazio
+    if (categoria !== 'pets' && categoria !== 'jogos') return '';
     
-    // Obter uma lista de características específicas para o tipo de animal
-    let tipoEfetivo = tipo || tipoPet;
-    if (tipoEfetivo === 'qualquer') {
-      // Escolher um tipo aleatório se for qualquer
-      const tipos = ['cachorro', 'gato', 'peixe', 'coelho', 'roedor', 'ave', 'reptil', 'exotico'];
-      tipoEfetivo = tipos[Math.floor(Math.random() * tipos.length)];
+    if (categoria === 'pets') {
+      // Obter uma lista de características específicas para o tipo de animal
+      let tipoEfetivo = tipo || tipoPet;
+      if (tipoEfetivo === 'qualquer') {
+        // Escolher um tipo aleatório se for qualquer
+        const tipos = ['cachorro', 'gato', 'peixe', 'coelho', 'roedor', 'ave', 'reptil', 'exotico'];
+        tipoEfetivo = tipos[Math.floor(Math.random() * tipos.length)];
+      }
+      
+      const caracteristicasEspecificas = CARACTERISTICAS_PETS[tipoEfetivo] || [];
+      
+      // Combinar com características gerais
+      const todasCaracteristicas = [...caracteristicasEspecificas, ...CARACTERISTICAS_GERAIS_PETS];
+      
+      // Selecionar uma característica aleatória
+      const indiceAleatorio = Math.floor(Math.random() * todasCaracteristicas.length);
+      return todasCaracteristicas[indiceAleatorio];
     }
     
-    const caracteristicasEspecificas = CARACTERISTICAS_PETS[tipoEfetivo] || [];
+    if (categoria === 'jogos') {
+      // Para jogos, o tipo seria o estilo de jogo (fps, rpg, etc.)
+      let tipoJogoEfetivo = '';
+      
+      // Se o usuário já selecionou um tipo específico, usar esse
+      if (tipoJogo !== 'qualquer') {
+        tipoJogoEfetivo = tipoJogo;
+      } else {
+        // Tentar encontrar o tipo de jogo nas características informadas
+        if (options.caracteristicas && options.caracteristicas.length > 0) {
+          const tiposJogos = ['fps', 'rpg', 'estrategia', 'moba', 'aventura', 'esportes', 'simulacao', 'terror'];
+          
+          // Verificar se alguma característica contém um tipo de jogo conhecido
+          for (const caract of options.caracteristicas) {
+            const caractLower = caract.toLowerCase();
+            for (const tipo of tiposJogos) {
+              if (caractLower.includes(tipo)) {
+                tipoJogoEfetivo = tipo;
+                break;
+              }
+            }
+            if (tipoJogoEfetivo) break;
+            
+            // Verificar equivalências para encontrar o tipo
+            if (caractLower.includes('tiro') || caractLower.includes('shooter')) tipoJogoEfetivo = 'fps';
+            else if (caractLower.includes('mmorpg') || caractLower.includes('role-playing')) tipoJogoEfetivo = 'rpg';
+            else if (caractLower.includes('battle royale') || caractLower.includes('arena')) tipoJogoEfetivo = 'moba';
+            else if (caractLower.includes('survival') || caractLower.includes('open world')) tipoJogoEfetivo = 'aventura';
+            else if (caractLower.includes('racing') || caractLower.includes('corrida')) tipoJogoEfetivo = 'esportes';
+            else if (caractLower.includes('building') || caractLower.includes('city')) tipoJogoEfetivo = 'simulacao';
+            else if (caractLower.includes('horror') || caractLower.includes('suspense')) tipoJogoEfetivo = 'terror';
+            
+            if (tipoJogoEfetivo) break;
+          }
+        }
+        
+        // Se não encontrou um tipo específico, escolhe aleatoriamente
+        if (!tipoJogoEfetivo) {
+          const tiposJogos = ['fps', 'rpg', 'estrategia', 'moba', 'aventura', 'esportes', 'simulacao', 'terror'];
+          tipoJogoEfetivo = tiposJogos[Math.floor(Math.random() * tiposJogos.length)];
+        }
+      }
+      
+      const caracteristicasEspecificas = CARACTERISTICAS_JOGOS[tipoJogoEfetivo] || [];
+      
+      // Combinar com características gerais de jogos
+      const todasCaracteristicas = [...caracteristicasEspecificas, ...CARACTERISTICAS_GERAIS_JOGOS];
+      
+      // Selecionar uma característica aleatória
+      const indiceAleatorio = Math.floor(Math.random() * todasCaracteristicas.length);
+      return todasCaracteristicas[indiceAleatorio];
+    }
     
-    // Combinar com características gerais
-    const todasCaracteristicas = [...caracteristicasEspecificas, ...CARACTERISTICAS_GERAIS_PETS];
-    
-    // Selecionar uma característica aleatória
-    const indiceAleatorio = Math.floor(Math.random() * todasCaracteristicas.length);
-    return todasCaracteristicas[indiceAleatorio];
-  }, [categoria, tipoPet]);
+    return '';
+  }, [categoria, tipoPet, options.caracteristicas, tipoJogo]);
   
-  // Função para formatar a descrição do pet
+  // Função para formatar a descrição do pet ou jogo
   const getDescricaoPersonalizada = useCallback((nome: string, tipo?: string) => {
-    if (categoria !== 'pets') return '';
+    if (categoria !== 'pets' && categoria !== 'jogos') return '';
     
     const caracteristica = obterCaracteristicaAleatoria(tipo?.toLowerCase() || '');
     if (!caracteristica) return '';
     
-    // Lista de templates de frases para tornar a descrição mais personalizada
-    const templates = [
-      `Geralmente, {nome} são {caracteristica}.`,
-      `{nome} costumam ser {caracteristica}.`,
-      `Pets como {nome} são conhecidos por serem {caracteristica}.`,
-      `{nome} tem a reputação de ser {caracteristica}.`,
-      `Os {nome} do mundo são famosos por serem {caracteristica}.`,
-      `Todo mundo sabe que {nome} adoram ser {caracteristica}.`,
-      `É típico de {nome} serem {caracteristica}.`,
-      `A personalidade de {nome} é {caracteristica}.`,
-      `Quem conhece {nome} sabe que são {caracteristica}.`,
-      `{nome} frequentemente demonstram ser {caracteristica}.`
-    ];
+    if (categoria === 'pets') {
+      // Lista de templates de frases para tornar a descrição mais personalizada para pets
+      const templates = [
+        `Geralmente, {nome} são {caracteristica}.`,
+        `{nome} costumam ser {caracteristica}.`,
+        `Pets como {nome} são conhecidos por serem {caracteristica}.`,
+        `{nome} tem a reputação de ser {caracteristica}.`,
+        `Os {nome} do mundo são famosos por serem {caracteristica}.`,
+        `Todo mundo sabe que {nome} adoram ser {caracteristica}.`,
+        `É típico de {nome} serem {caracteristica}.`,
+        `A personalidade de {nome} é {caracteristica}.`,
+        `Quem conhece {nome} sabe que são {caracteristica}.`,
+        `{nome} frequentemente demonstram ser {caracteristica}.`
+      ];
+      
+      // Escolher um template aleatório
+      const template = templates[Math.floor(Math.random() * templates.length)];
+      
+      // Preencher o template com o nome e a característica
+      return template
+        .replace('{nome}', nome)
+        .replace('{caracteristica}', caracteristica);
+    }
     
-    // Escolher um template aleatório
-    const template = templates[Math.floor(Math.random() * templates.length)];
+    if (categoria === 'jogos') {
+      // Lista de templates de frases para tornar a descrição mais personalizada para jogos
+      const templates = [
+        `Os players que usam o nick {nome} são conhecidos por serem {caracteristica}.`,
+        `{nome} é um nickname para quem é {caracteristica}.`,
+        `Jogadores com o nick {nome} têm a reputação de serem {caracteristica}.`,
+        `O nome {nome} sugere um jogador {caracteristica}.`,
+        `Nos servidores, {nome} é sinônimo de jogador {caracteristica}.`,
+        `Quando veem {nome} no lobby, todos sabem que é alguém {caracteristica}.`,
+        `{nome} é um nickname perfeito para quem é {caracteristica}.`,
+        `Os adversários temem ver {nome}, um jogador {caracteristica}.`,
+        `Um verdadeiro {nome} é sempre {caracteristica} nas partidas.`,
+        `Os streamers com o nick {nome} são famosos por serem {caracteristica}.`
+      ];
+      
+      // Escolher um template aleatório
+      const template = templates[Math.floor(Math.random() * templates.length)];
+      
+      // Preencher o template com o nome e a característica
+      return template
+        .replace('{nome}', nome)
+        .replace('{caracteristica}', caracteristica);
+    }
     
-    // Preencher o template com o nome e a característica
-    return template
-      .replace('{nome}', nome)
-      .replace('{caracteristica}', caracteristica);
+    return '';
   }, [categoria, obterCaracteristicaAleatoria]);
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
       <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-        Gerador de Nomes Inteligente
+        {categoria === 'jogos' ? 'Gerador de Nicknames Inteligente' : 'Gerador de Nomes Inteligente'}
       </h3>
 
       {/* Seletor de tipo de pet (apenas para categoria pets) */}
@@ -246,6 +342,107 @@ export default function AINameGenerator({
               onClick={() => setTipoPet('exotico')}
             >
               Exótico
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Seletor de tipo de jogo (apenas para categoria jogos) */}
+      {categoria === 'jogos' && (
+        <div className="mb-4">
+          <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+            Tipo de Jogo
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'qualquer' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('qualquer')}
+            >
+              Qualquer
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'fps' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('fps')}
+            >
+              FPS / Tiro
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'rpg' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('rpg')}
+            >
+              RPG
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'estrategia' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('estrategia')}
+            >
+              Estratégia
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'moba' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('moba')}
+            >
+              MOBA / Battle Royale
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'aventura' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('aventura')}
+            >
+              Aventura / Survival
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'esportes' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('esportes')}
+            >
+              Esportes / Corrida
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'simulacao' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('simulacao')}
+            >
+              Simulação / Construção
+            </button>
+            <button 
+              className={`px-3 py-2 rounded-lg text-sm ${
+                tipoJogo === 'terror' 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setTipoJogo('terror')}
+            >
+              Terror / Horror
             </button>
           </div>
         </div>
@@ -376,7 +573,10 @@ export default function AINameGenerator({
             : 'bg-purple-600 hover:bg-purple-700 text-white'
         }`}
       >
-        {isGenerating ? 'Gerando...' : 'Gerar Nome'}
+        {isGenerating 
+          ? (categoria === 'jogos' ? 'Gerando...' : 'Gerando...') 
+          : (categoria === 'jogos' ? 'Gerar Nickname' : 'Gerar Nome')
+        }
       </button>
 
       {error && (
@@ -389,7 +589,7 @@ export default function AINameGenerator({
         <div className="mt-6">
           <NomeDisplay 
             nome={nomesGerados[novoNomeIndex].nome} 
-            caracteristica={categoria === 'pets' 
+            caracteristica={(categoria === 'pets' || categoria === 'jogos')
               ? getDescricaoPersonalizada(nomesGerados[novoNomeIndex].nome, nomesGerados[novoNomeIndex].tipo) 
               : undefined
             }
@@ -397,7 +597,7 @@ export default function AINameGenerator({
             corDestaque="text-purple-500 dark:text-purple-400" 
             mostrarAnuncio={false}
             categoria={categoria}
-            textoBotaoGerar="Próximo nome"
+            textoBotaoGerar={categoria === 'jogos' ? 'Próximo nickname' : 'Próximo nome'}
           />
           
           <div className="mt-4 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
@@ -422,6 +622,23 @@ export default function AINameGenerator({
                   tipoPet === 'reptil' ? 'Réptil' :
                   tipoPet === 'roedor' ? 'Hamster/Roedor' :
                   tipoPet.charAt(0).toUpperCase() + tipoPet.slice(1)
+                }
+              </p>
+            )}
+            
+            {/* Exibir a informação sobre o tipoJogo selecionado para jogos */}
+            {categoria === 'jogos' && tipoJogo !== 'qualquer' && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                <span className="font-semibold">Estilo de jogo:</span> {
+                  tipoJogo === 'fps' ? 'FPS / Tiro' :
+                  tipoJogo === 'rpg' ? 'RPG' :
+                  tipoJogo === 'estrategia' ? 'Estratégia' :
+                  tipoJogo === 'moba' ? 'MOBA / Battle Royale' :
+                  tipoJogo === 'aventura' ? 'Aventura / Survival' :
+                  tipoJogo === 'esportes' ? 'Esportes / Corrida' :
+                  tipoJogo === 'simulacao' ? 'Simulação / Construção' :
+                  tipoJogo === 'terror' ? 'Terror / Horror' :
+                  tipoJogo.charAt(0).toUpperCase() + tipoJogo.slice(1)
                 }
               </p>
             )}
