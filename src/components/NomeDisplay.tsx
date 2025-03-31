@@ -6,6 +6,7 @@ import AdBanner from './AdBanner';
 import FavoriteButton from './FavoriteButton';
 import ShareButtons from './ShareButtons';
 import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NomeDisplayProps {
   nome: string;
@@ -31,6 +32,7 @@ export default function NomeDisplay({
   mostrarAnuncio = true,
   categoria
 }: NomeDisplayProps) {
+  const { t } = useLanguage();
   const [copiado, setCopiado] = useState(false);
 
   const tamanhoClasses = {
@@ -40,10 +42,10 @@ export default function NomeDisplay({
   };
 
   const categoriaNomes = {
-    pets: 'pet',
-    jogos: 'jogo',
-    bebes: 'bebê',
-    aleatorios: 'uso geral'
+    pets: t('nav.pets').toLowerCase(),
+    jogos: t('nav.games').toLowerCase(),
+    bebes: t('nav.babies').toLowerCase(),
+    aleatorios: t('random.title').toLowerCase()
   };
 
   const copiarParaClipboard = useCallback(() => {
@@ -66,26 +68,43 @@ export default function NomeDisplay({
   const renderizarCaracteristica = () => {
     if (!caracteristica) return null;
     
-    // Dividir a string para destacar o nome quando aparecer
-    const partes = caracteristica.split(nome);
+    // Divida as linhas em caso de quebras de linha
+    const linhas = caracteristica.split('\n');
     
-    // Se o nome não estiver na string, apenas retorna o texto original
-    if (partes.length === 1) {
-      return <p className="text-gray-300 text-sm mt-2 mb-4 italic">{caracteristica}</p>;
-    }
-    
-    // Caso contrário, retorna um JSX com o nome destacado
     return (
-      <p className="text-gray-300 text-sm mt-2 mb-4 italic">
-        {partes.map((parte, index) => (
-          <React.Fragment key={index}>
-            {parte}
-            {index < partes.length - 1 && (
-              <span className={`font-semibold ${corDestaque}`}>{nome}</span>
-            )}
-          </React.Fragment>
-        ))}
-      </p>
+      <div className="text-gray-300 text-sm mt-4 mb-2 italic space-y-2">
+        {linhas.map((linha, i) => {
+          // Se a linha contém o nome, destacá-lo
+          if (linha.includes(nome)) {
+            const partes = linha.split(nome);
+            return (
+              <p key={i}>
+                {partes.map((parte, index) => (
+                  <React.Fragment key={index}>
+                    {parte}
+                    {index < partes.length - 1 && (
+                      <span className={`font-semibold ${corDestaque}`}>{nome}</span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </p>
+            );
+          }
+          
+          // Se for uma linha começando com "Significado:", destacar
+          else if (linha.startsWith('Significado:')) {
+            return (
+              <p key={i} className="font-normal">
+                <span className="font-medium">Significado:</span> 
+                {linha.substring(12)}
+              </p>
+            );
+          }
+          
+          // Caso contrário, exibe a linha normalmente
+          return <p key={i}>{linha}</p>;
+        })}
+      </div>
     );
   };
 
@@ -93,7 +112,7 @@ export default function NomeDisplay({
     <div className="w-full flex flex-col gap-4">
       <div className="w-full bg-[#1e293b] rounded-xl shadow-md p-6 text-center">
         <h2 className="text-gray-300 mb-2">
-          Nome sugerido:
+          {t('random.suggested')}
         </h2>
         <div className="relative flex justify-center items-center">
           <p className={`font-bold mb-2 ${tamanhoClasses[tamanho]} ${corDestaque} font-mono tracking-wide`}>
@@ -105,8 +124,8 @@ export default function NomeDisplay({
             <button 
               onClick={copiarParaClipboard}
               className="p-2 text-gray-400 hover:text-gray-200 transition-colors"
-              aria-label="Copiar nome"
-              title="Copiar para a área de transferência"
+              aria-label={t('button.copy')}
+              title={t('button.copy')}
             >
               {copiado ? (
                 <Check className="h-5 w-5 text-green-500" />

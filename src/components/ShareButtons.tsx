@@ -2,6 +2,7 @@
 
 import { Share2, Copy, Check, Mail, Facebook, Send, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ShareButtonsProps {
   nome: string;
@@ -9,6 +10,7 @@ interface ShareButtonsProps {
 }
 
 export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
+  const { t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [copiado, setCopiado] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const mensagem = `O que acham do nome ${nome} para meu ${categoria}?`;
+  const mensagem = t('share.message').replace('{name}', nome).replace('{category}', categoria);
   const urlSite = 'https://nomeador.com';
   const mensagemCompleta = `${mensagem} ${urlSite}`;
   
@@ -64,7 +66,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
       color: 'bg-green-500 hover:bg-green-600',
       hoverColor: 'hover:bg-green-600',
       borderColor: 'border-green-600',
-      label: 'Compartilhar no WhatsApp',
+      label: t('share.whatsapp'),
       icon: <WhatsAppIcon />
     },
     {
@@ -73,7 +75,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
       color: 'bg-blue-500 hover:bg-blue-600',
       hoverColor: 'hover:bg-blue-600',
       borderColor: 'border-blue-600',
-      label: 'Compartilhar no Telegram',
+      label: t('share.telegram'),
       icon: <Send className="h-5 w-5" />
     },
     {
@@ -82,7 +84,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
       color: 'bg-[#3b5998] hover:bg-[#2d4373]',
       hoverColor: 'hover:bg-[#2d4373]',
       borderColor: 'border-[#3b5998]',
-      label: 'Compartilhar no Facebook',
+      label: t('share.facebook'),
       icon: <Facebook className="h-5 w-5" />
     },
     {
@@ -91,16 +93,16 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
       color: 'bg-black hover:bg-gray-800',
       hoverColor: 'hover:bg-gray-800',
       borderColor: 'border-gray-800',
-      label: 'Compartilhar no X',
+      label: t('share.twitter'),
       icon: <X className="h-5 w-5" />
     },
     {
       name: 'Email',
-      url: `mailto:?subject=Sugestão de nome para ${categoria}&body=${encodeURIComponent(mensagemCompleta)}`,
+      url: `mailto:?subject=${t('share.email.subject').replace('{category}', categoria)}&body=${encodeURIComponent(mensagemCompleta)}`,
       color: 'bg-gray-600 hover:bg-gray-700',
       hoverColor: 'hover:bg-gray-700',
       borderColor: 'border-gray-600',
-      label: 'Enviar por email',
+      label: t('share.email'),
       icon: <Mail className="h-5 w-5" />
     },
   ];
@@ -110,8 +112,8 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
       <button
         onClick={toggleMenu}
         className="p-2 text-gray-400 hover:text-blue-400 transition-all duration-300 hover:scale-110"
-        aria-label="Compartilhar nome"
-        title="Compartilhar nome"
+        aria-label={t('button.share')}
+        title={t('button.share')}
       >
         <Share2 className="h-5 w-5" />
       </button>
@@ -127,7 +129,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
         >
           <div className="p-2">
             <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">
-              Compartilhar &quot;{nome}&quot;
+              {t('share.title').replace('{name}', nome)}
             </h3>
             
             <div className="grid grid-cols-5 gap-2 mb-3">
@@ -160,12 +162,12 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
                 {copiado ? (
                   <>
                     <Check className="h-4 w-4 mr-2" />
-                    <span>Mensagem copiada!</span>
+                    <span>{t('share.copied')}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="h-4 w-4 mr-2" />
-                    <span>Copiar mensagem</span>
+                    <span>{t('share.copy')}</span>
                   </>
                 )}
               </button>

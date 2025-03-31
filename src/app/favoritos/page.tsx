@@ -7,16 +7,11 @@ import Footer from '@/components/Footer';
 import { Trash2, Copy, Check, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import AdBanner from '@/components/AdBanner';
-
-const CATEGORY_LABELS = {
-  pets: 'Pets',
-  jogos: 'Jogos',
-  bebes: 'Bebês',
-  aleatorios: 'Aleatórios'
-};
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function FavoritosPage() {
   const { favorites, removeFavorite, clearFavorites } = useFavorites();
+  const { t } = useLanguage();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -30,7 +25,7 @@ export default function FavoritosPage() {
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-100">
-            Carregando favoritos...
+            {t('nav.favorites')}...
           </h1>
         </main>
         <Footer />
@@ -47,6 +42,14 @@ export default function FavoritosPage() {
     }, 2000);
   };
 
+  // Usar o sistema de traduções para os labels das categorias
+  const CATEGORY_LABELS = {
+    pets: t('nav.pets'),
+    jogos: t('nav.games'),
+    bebes: t('nav.babies'),
+    aleatorios: t('random.title')
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
@@ -57,13 +60,13 @@ export default function FavoritosPage() {
             href="/" 
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
           >
-            <ArrowLeft className="w-4 h-4 mr-1" /> Voltar à página inicial
+            <ArrowLeft className="w-4 h-4 mr-1" /> {t('nav.home')}
           </Link>
         </div>
         
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            Meus Favoritos
+            {t('nav.favorites')}
           </h1>
           
           {favorites.length > 0 && (
@@ -71,7 +74,7 @@ export default function FavoritosPage() {
               onClick={clearFavorites}
               className="text-sm px-3 py-1 border border-red-500 text-red-500 rounded hover:bg-red-500 hover:text-white dark:hover:bg-red-600 transition-colors"
             >
-              Limpar todos
+              {t('button.clear')}
             </button>
           )}
         </div>
@@ -79,13 +82,13 @@ export default function FavoritosPage() {
         {favorites.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl shadow">
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Você ainda não adicionou nenhum nome aos favoritos.
+              {t('favorites.empty')}
             </p>
             <Link 
               href="/" 
               className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
             >
-              Explorar nomes
+              {t('favorites.explore')}
             </Link>
           </div>
         ) : (
@@ -103,7 +106,7 @@ export default function FavoritosPage() {
                     <button
                       onClick={() => handleCopy(favorite.name, favorite.id)}
                       className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                      title="Copiar nome"
+                      title={t('button.copy')}
                     >
                       {copiedId === favorite.id ? (
                         <Check className="h-4 w-4 text-green-500" />
@@ -114,7 +117,7 @@ export default function FavoritosPage() {
                     <button
                       onClick={() => removeFavorite(favorite.id)}
                       className="p-1 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400"
-                      title="Remover dos favoritos"
+                      title={t('button.unfavorite')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -124,7 +127,7 @@ export default function FavoritosPage() {
                   {favorite.name}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
-                  Salvo em: {new Date(favorite.timestamp).toLocaleDateString()}
+                  {t('favorites.saved')}: {new Date(favorite.timestamp).toLocaleDateString()}
                 </p>
               </div>
             ))}

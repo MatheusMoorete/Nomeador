@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { Heart } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FavoriteButtonProps {
   name: string;
@@ -11,6 +12,7 @@ interface FavoriteButtonProps {
 
 export default function FavoriteButton({ name, category }: FavoriteButtonProps) {
   const { addFavorite, removeFavorite, isFavorite, favorites } = useFavorites();
+  const { t } = useLanguage();
   const [isAnimating, setIsAnimating] = useState(false);
   const isFav = isFavorite(name);
 
@@ -39,8 +41,8 @@ export default function FavoriteButton({ name, category }: FavoriteButtonProps) 
       className={`inline-flex items-center justify-center transition-all duration-300 ${
         isAnimating ? 'scale-125' : 'scale-100'
       }`}
-      aria-label={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-      title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+      aria-label={isFav ? t('button.unfavorite') : t('button.favorite')}
+      title={isFav ? t('button.unfavorite') : t('button.favorite')}
     >
       <Heart
         className={`w-6 h-6 ${

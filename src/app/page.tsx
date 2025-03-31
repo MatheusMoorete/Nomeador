@@ -1,9 +1,14 @@
+'use client';
+
 import Link from "next/link";
 import { PawPrint, Gamepad2, Baby, Shuffle } from 'lucide-react';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
+  
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
       <Header />
@@ -13,7 +18,7 @@ export default function Home() {
           Nomeador
         </h1>
         <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-12">
-          Encontre o nome perfeito para qualquer ocasião
+          {t('site.description')}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl">
@@ -22,7 +27,7 @@ export default function Home() {
             className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-6 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center"
           >
             <PawPrint className="h-10 w-10 mb-2" />
-            <span>Nomes para Pets</span>
+            <span>{t('nav.pets')}</span>
           </Link>
           
           <Link 
@@ -30,7 +35,7 @@ export default function Home() {
             className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-6 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center"
           >
             <Gamepad2 className="h-10 w-10 mb-2" />
-            <span>Nicknames para Jogos</span>
+            <span>{t('nav.games')}</span>
           </Link>
           
           <Link 
@@ -38,7 +43,7 @@ export default function Home() {
             className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-6 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center"
           >
             <Baby className="h-10 w-10 mb-2" />
-            <span>Nomes de Bebês</span>
+            <span>{t('nav.babies')}</span>
           </Link>
           
           <Link 
@@ -46,7 +51,7 @@ export default function Home() {
             className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-6 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center"
           >
             <Shuffle className="h-10 w-10 mb-2" />
-            <span>Nomes Aleatórios</span>
+            <span>{t('nav.random')}</span>
           </Link>
         </div>
       </main>
