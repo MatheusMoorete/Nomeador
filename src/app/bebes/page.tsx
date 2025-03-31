@@ -1058,6 +1058,14 @@ export default function Bebes() {
   const [nomesAnteriores, setNomesAnteriores] = useState<{nome: string; significado?: string; caracteristica?: string}[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [modoGerador, setModoGerador] = useState<'tradicional' | 'ia'>('tradicional');
+  // Novo estado para controlar nomes já utilizados (separados por gênero)
+  const [nomesUtilizados, setNomesUtilizados] = useState<{
+    menino: string[],
+    menina: string[]
+  }>({
+    menino: [],
+    menina: []
+  });
 
   const obterNomeCompleto = (nome: string): NomeCompleto | undefined => {
     if (genero === 'menino') {
@@ -1081,22 +1089,84 @@ export default function Bebes() {
       let listaDeNomes: string[] = [];
       
       if (genero === 'menino') {
-        listaDeNomes = nomesMenino[origemAleatoria as keyof typeof nomesMenino];
+        // Combinar todas as listas de origem para ter mais variedade
+        listaDeNomes = [
+          ...nomesMenino.brasileiro,
+          ...nomesMenino.internacional, 
+          ...nomesMenino.classico
+        ];
       } else {
-        listaDeNomes = nomesMenina[origemAleatoria as keyof typeof nomesMenina];
+        listaDeNomes = [
+          ...nomesMenina.brasileiro,
+          ...nomesMenina.internacional,
+          ...nomesMenina.classico
+        ];
       }
       
-      const indiceAleatorio = Math.floor(Math.random() * listaDeNomes.length);
-      const nome = listaDeNomes[indiceAleatorio];
+      // Filtrar nomes já utilizados
+      const nomesDisponiveis = listaDeNomes.filter(
+        nome => !nomesUtilizados[genero as keyof typeof nomesUtilizados].includes(nome)
+      );
+      
+      // Se não houver mais nomes disponíveis, exibir uma mensagem de aviso
+      if (nomesDisponiveis.length === 0) {
+        setIsGenerating(false);
+        alert('Todos os nomes disponíveis já foram gerados! Recarregue a página para começar novamente.');
+        return;
+      }
+      
+      // Selecionar um nome aleatório dos nomes disponíveis
+      const indiceAleatorio = Math.floor(Math.random() * nomesDisponiveis.length);
+      const nome = nomesDisponiveis[indiceAleatorio];
+      
+      // Adicionar o nome à lista de utilizados
+      setNomesUtilizados(prev => ({
+        ...prev,
+        [genero]: [...prev[genero as keyof typeof nomesUtilizados], nome]
+      }));
       
       let novoSignificado = '';
       let novaCaracteristica = '';
       
       // Atualizar a origem para buscar o significado e característica corretos
-      setOrigem(origemAleatoria);
+      // Tentar encontrar em qual origem o nome está para melhor correspondência
+      const origemDoNome = 
+        (genero === 'menino' && nomesMenino.brasileiro.includes(nome)) ? 'brasileiro' :
+        (genero === 'menino' && nomesMenino.internacional.includes(nome)) ? 'internacional' :
+        (genero === 'menino' && nomesMenino.classico.includes(nome)) ? 'classico' :
+        (genero === 'menina' && nomesMenina.brasileiro.includes(nome)) ? 'brasileiro' :
+        (genero === 'menina' && nomesMenina.internacional.includes(nome)) ? 'internacional' :
+        (genero === 'menina' && nomesMenina.classico.includes(nome)) ? 'classico' :
+        origemAleatoria;
+      
+      setOrigem(origemDoNome);
       
       // Tentar obter o nome completo
-      const nomeCompleto = obterNomeCompleto(nome);
+      // Verificar todas as origens para encontrar o nome
+      let nomeCompleto = obterNomeCompleto(nome);
+      
+      // Se não encontrou na origem detectada, procurar em todas as origens
+      if (!nomeCompleto) {
+        for (const origem of ['brasileiro', 'internacional', 'classico']) {
+          if (genero === 'menino') {
+            const origemAtual = origem as keyof typeof nomesMeninoCompletosFiltrados;
+            const encontrado = nomesMeninoCompletosFiltrados[origemAtual].find(item => item.nome === nome);
+            if (encontrado) {
+              nomeCompleto = encontrado;
+              setOrigem(origem);
+              break;
+            }
+          } else {
+            const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
+            const encontrado = nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
+            if (encontrado) {
+              nomeCompleto = encontrado;
+              setOrigem(origem);
+              break;
+            }
+          }
+        }
+      }
       
       if (nomeCompleto) {
         novoSignificado = nomeCompleto.significado;
@@ -1105,7 +1175,7 @@ export default function Bebes() {
         // Se não encontrar o nome no banco de dados completo, adicionar valores padrão
         // com base no gênero e origem para garantir que todos os nomes tenham informações
         if (genero === 'menino') {
-          switch(origemAleatoria) {
+          switch(origemDoNome) {
             case 'brasileiro':
               novoSignificado = "nome de origem brasileira";
               novaCaracteristica = "Costuma ter personalidade forte e marcante";
@@ -1120,7 +1190,7 @@ export default function Bebes() {
               break;
           }
         } else { // menina
-          switch(origemAleatoria) {
+          switch(origemDoNome) {
             case 'brasileiro':
               novoSignificado = "nome de origem brasileira";
               novaCaracteristica = "Costuma ser expressiva e comunicativa";
@@ -1140,7 +1210,7 @@ export default function Bebes() {
         
         // Adicionar o nome à lista completa para uso futuro
         if (genero === 'menino') {
-          const origemKey = origemAleatoria as keyof typeof nomesMeninoCompletosFiltrados;
+          const origemKey = origemDoNome as keyof typeof nomesMeninoCompletosFiltrados;
           const listaNomesCompletos = [...nomesMeninoCompletosFiltrados[origemKey]];
           listaNomesCompletos.push({
             nome,
@@ -1150,7 +1220,7 @@ export default function Bebes() {
           // Não estamos atualizando a lista original para evitar mutação de estado
           // Isso é apenas para registro interno
         } else {
-          const origemKey = origemAleatoria as keyof typeof nomesMeninaCompletasFiltradas;
+          const origemKey = origemDoNome as keyof typeof nomesMeninaCompletasFiltradas;
           const listaNomesCompletos = [...nomesMeninaCompletasFiltradas[origemKey]];
           listaNomesCompletos.push({
             nome,
