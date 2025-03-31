@@ -1,18 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NomeDisplay from '@/components/NomeDisplay';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AINameGenerator from '@/components/AINameGenerator';
 import { LISTA_NOMES_PETS } from '@/data/petNames';
+import { CARACTERISTICAS_PETS, CARACTERISTICAS_GERAIS_PETS } from '@/data/caracteristicasPets';
+
+// Interface para nome gerado com características
+interface NomeGeradoInfo {
+  nome: string;
+  caracteristica: string;
+}
 
 export default function Pets() {
   const [tipoAnimal, setTipoAnimal] = useState('cachorro');
   const [generoAnimal, setGeneroAnimal] = useState('neutro');
-  const [nomeGerado, setNomeGerado] = useState('');
+  const [nomeGerado, setNomeGerado] = useState<NomeGeradoInfo | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [modoGerador, setModoGerador] = useState<'tradicional' | 'ia'>('tradicional');
+  
+  // Estado para armazenar nomes já utilizados nesta sessão
+  const [nomesUtilizados, setNomesUtilizados] = useState<Record<string, string[]>>({
+    cachorro: [],
+    gato: [],
+    peixe: [],
+    coelho: [],
+    roedor: [],
+    ave: [],
+    reptil: [],
+    exotico: []
+  });
+
+  // Reiniciar os nomes utilizados quando a página carregar
+  useEffect(() => {
+    setNomesUtilizados({
+      cachorro: [],
+      gato: [],
+      peixe: [],
+      coelho: [],
+      roedor: [],
+      ave: [],
+      reptil: [],
+      exotico: []
+    });
+  }, []);
+
+  const obterCaracteristicaAleatoria = (tipo: string): string => {
+    // Obter uma lista de características específicas para o tipo de animal
+    const caracteristicasEspecificas = CARACTERISTICAS_PETS[tipo] || [];
+    
+    // Combinar com características gerais
+    const todasCaracteristicas = [...caracteristicasEspecificas, ...CARACTERISTICAS_GERAIS_PETS];
+    
+    // Selecionar uma característica aleatória
+    const indiceAleatorio = Math.floor(Math.random() * todasCaracteristicas.length);
+    return todasCaracteristicas[indiceAleatorio];
+  };
 
   const gerarNome = () => {
     setIsGenerating(true);
@@ -50,10 +95,57 @@ export default function Pets() {
           listaNomes = LISTA_NOMES_PETS.cachorro.neutro;
       }
       
-      const indiceAleatorio = Math.floor(Math.random() * listaNomes.length);
-      setNomeGerado(listaNomes[indiceAleatorio]);
+      // Filtrar nomes já utilizados nesta sessão
+      const nomesDisponiveis = listaNomes.filter(
+        nome => !nomesUtilizados[tipoAnimal].includes(nome)
+      );
+      
+      // Se todos os nomes já foram usados, volte a usar todos
+      const listaFinal = nomesDisponiveis.length > 0 ? nomesDisponiveis : listaNomes;
+      
+      const indiceAleatorio = Math.floor(Math.random() * listaFinal.length);
+      const nomeEscolhido = listaFinal[indiceAleatorio];
+      
+      // Adicionar o nome à lista de utilizados
+      setNomesUtilizados(prev => ({
+        ...prev,
+        [tipoAnimal]: [...prev[tipoAnimal], nomeEscolhido]
+      }));
+      
+      // Gerar uma característica aleatória para o nome
+      const caracteristica = obterCaracteristicaAleatoria(tipoAnimal);
+      
+      // Definir o nome gerado com sua característica
+      setNomeGerado({
+        nome: nomeEscolhido,
+        caracteristica
+      });
+      
       setIsGenerating(false);
     }, 600);
+  };
+
+  // Ao mudar o tipo de animal ou gênero, limpar o nome gerado
+  useEffect(() => {
+    setNomeGerado(null);
+  }, [tipoAnimal, generoAnimal]);
+
+  // Função para formatar o texto de descrição do animal
+  const getDescricaoAnimal = () => {
+    if (!nomeGerado) return '';
+    
+    const tipoFormatado = {
+      'cachorro': 'cachorro',
+      'gato': 'gato',
+      'peixe': 'peixe',
+      'coelho': 'coelho',
+      'roedor': 'roedor',
+      'ave': 'pássaro',
+      'reptil': 'réptil',
+      'exotico': 'animal exótico'
+    }[tipoAnimal];
+    
+    return `Um ${tipoFormatado} ${nomeGerado.caracteristica}.`;
   };
 
   return (
@@ -227,18 +319,27 @@ export default function Pets() {
           </div>
 
           {modoGerador === 'tradicional' && nomeGerado && (
-            <NomeDisplay 
-              nome={nomeGerado} 
-              onGerarNovo={gerarNome}
-              corDestaque={
-                generoAnimal === 'macho' 
-                  ? 'text-blue-600 dark:text-blue-400' 
-                  : generoAnimal === 'femea' 
-                    ? 'text-pink-500 dark:text-pink-400'
-                    : 'text-purple-600 dark:text-purple-400'
-              }
-              categoria="pets"
-            />
+            <div className="w-full flex flex-col gap-4">
+              <NomeDisplay 
+                nome={nomeGerado.nome} 
+                onGerarNovo={gerarNome}
+                corDestaque={
+                  generoAnimal === 'macho' 
+                    ? 'text-blue-600 dark:text-blue-400' 
+                    : generoAnimal === 'femea' 
+                      ? 'text-pink-500 dark:text-pink-400'
+                      : 'text-purple-600 dark:text-purple-400'
+                }
+                categoria="pets"
+              />
+              
+              {/* Bloco para mostrar a característica */}
+              <div className="w-full bg-[#1e293b] rounded-xl shadow-md p-4 mt-2">
+                <p className="text-gray-300 text-center">
+                  <span className="font-semibold">Personalidade:</span> {getDescricaoAnimal()}
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </main>
