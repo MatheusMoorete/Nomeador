@@ -6,57 +6,107 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AINameGenerator from '@/components/AINameGenerator';
 
-// Lista de nomes de pets
-const nomesCachorro = [
-  'Thor', 'Luna', 'Max', 'Bella', 'Rex', 'Mel', 'Bob', 'Nina', 
-  'Duke', 'Amora', 'Toby', 'Princesa', 'Fred', 'Lola', 'Simba', 
-  'Meg', 'Billy', 'Mia', 'Luke', 'Kiara'
-];
+// Lista de nomes de pets separados por gênero
+const nomesCachorro = {
+  macho: [
+    'Thor', 'Max', 'Rex', 'Bob', 'Duke', 'Toby', 'Fred', 'Simba', 
+    'Billy', 'Luke', 'Rocky', 'Buddy', 'Apollo', 'Zeus', 'Bruno',
+    'Spike', 'Marley', 'Lucky', 'Charlie', 'Theo'
+  ],
+  femea: [
+    'Luna', 'Bella', 'Mel', 'Nina', 'Amora', 'Princesa', 'Lola', 
+    'Meg', 'Mia', 'Kiara', 'Nina', 'Nala', 'Pandora', 'Laika', 'Malu',
+    'Maya', 'Kika', 'Pituca', 'Pepper', 'Penny'
+  ],
+  neutro: [
+    'Thor', 'Luna', 'Max', 'Bella', 'Rex', 'Mel', 'Bob', 'Nina', 
+    'Duke', 'Amora', 'Toby', 'Princesa', 'Fred', 'Lola', 'Simba', 
+    'Meg', 'Billy', 'Mia', 'Luke', 'Kiara'
+  ]
+};
 
-const nomesGato = [
-  'Oliver', 'Luna', 'Leo', 'Lili', 'Simba', 'Nina', 'Tom', 'Mia', 
-  'Félix', 'Mely', 'Garfield', 'Nala', 'Thor', 'Mimi', 'Frajola', 
-  'Chloe', 'Bóris', 'Amora', 'Ozzy', 'Mel'
-];
+const nomesGato = {
+  macho: [
+    'Oliver', 'Leo', 'Simba', 'Tom', 'Félix', 'Garfield', 'Thor', 
+    'Bóris', 'Ozzy', 'Mingau', 'Romeu', 'Bigode', 'Tigre', 'Caju',
+    'Merlim', 'Nescau', 'Logan', 'Toddy', 'Trovão', 'Miau'
+  ],
+  femea: [
+    'Luna', 'Lili', 'Nina', 'Mia', 'Mely', 'Nala', 'Mimi', 
+    'Chloe', 'Amora', 'Mel', 'Cacau', 'Malu', 'Jade', 'Filó',
+    'Cherie', 'Pandora', 'Maggie', 'Pipoca', 'Pantera', 'Sofia'
+  ],
+  neutro: [
+    'Oliver', 'Luna', 'Leo', 'Lili', 'Simba', 'Nina', 'Tom', 'Mia', 
+    'Félix', 'Mely', 'Garfield', 'Nala', 'Thor', 'Mimi', 'Frajola', 
+    'Chloe', 'Bóris', 'Amora', 'Ozzy', 'Mel'
+  ]
+};
 
-const nomesPeixe = [
-  'Nemo', 'Dory', 'Bolha', 'Azul', 'Flash', 'Splash', 'Coral', 'Marlin', 
-  'Goldie', 'Bubble', 'Finn', 'Ariel', 'Gil', 'Aqua', 'Wanda', 
-  'Flipper', 'Nado', 'Blue', 'Pearl', 'Ruby'
-];
+const nomesPeixe = {
+  macho: [
+    'Nemo', 'Flash', 'Splash', 'Marlin', 'Finn', 'Gil', 'Blue',
+    'Bolha', 'Aquaman', 'Tritão', 'Marin', 'Coral', 'Oceano', 'Shark',
+    'Flipper', 'Nado', 'Azulão', 'Peixoto', 'Vermelho', 'Limão'
+  ],
+  femea: [
+    'Dory', 'Ariel', 'Coral', 'Pearl', 'Ruby', 'Aqua', 'Wanda',
+    'Sereia', 'Bolha', 'Bubble', 'Marina', 'Goldie', 'Pérola', 'Azulina',
+    'Escama', 'Cristal', 'Nada', 'Luna', 'Estrela', 'Água'
+  ],
+  neutro: [
+    'Nemo', 'Dory', 'Bolha', 'Azul', 'Flash', 'Splash', 'Coral', 'Marlin', 
+    'Goldie', 'Bubble', 'Finn', 'Ariel', 'Gil', 'Aqua', 'Wanda', 
+    'Flipper', 'Nado', 'Blue', 'Pearl', 'Ruby'
+  ]
+};
 
-const nomesCoelho = [
-  'Pernalonga', 'Fofinho', 'Thumper', 'Orelhudo', 'Algodão', 'Cenoura', 
-  'Pipoca', 'Floco', 'Macio', 'Salto', 'Pipinho', 'Biju', 'Tambor', 
-  'Bolinha', 'Felpudo', 'Pompom', 'Chocolate', 'Branquinho', 'Patinha', 'Neve'
-];
+const nomesCoelho = {
+  macho: [
+    'Pernalonga', 'Thumper', 'Orelhudo', 'Tambor', 'Saltitante', 'Puff',
+    'Algodão', 'Floco', 'Macio', 'Salto', 'Pipinho', 'Bolinha', 'Pintado',
+    'Felpudo', 'Chocolate', 'Cenoura', 'Branquinho', 'Pipoca', 'Nevado', 'Pulão'
+  ],
+  femea: [
+    'Fofa', 'Fofinha', 'Bolinha', 'Pipoca', 'Algodão', 'Neve', 'Cenoura', 
+    'Patinha', 'Floquinho', 'Pérola', 'Branquinha', 'Pula-pula', 'Orelhinha',
+    'Lola', 'Lili', 'Cotton', 'Belinha', 'Fru-fru', 'Moranguinho', 'Boneca'
+  ],
+  neutro: [
+    'Pernalonga', 'Fofinho', 'Thumper', 'Orelhudo', 'Algodão', 'Cenoura', 
+    'Pipoca', 'Floco', 'Macio', 'Salto', 'Pipinho', 'Biju', 'Tambor', 
+    'Bolinha', 'Felpudo', 'Pompom', 'Chocolate', 'Branquinho', 'Patinha', 'Neve'
+  ]
+};
 
-const nomesRoedor = [
-  'Twister', 'Pipoca', 'Pingo', 'Bolt', 'Minnie', 'Mickey', 'Lilo', 
-  'Bolinha', 'Floco', 'Amendoim', 'Stuart', 'Ratatouille', 'Nugget', 
-  'Cookie', 'Pitufo', 'Petunia', 'Mochi', 'Lentilha', 'Caramelo', 'Pimenta'
-];
+// Versões reduzidas para os outros animais
+const nomesRoedor = {
+  macho: ['Twister', 'Pingo', 'Bolt', 'Mickey', 'Stuart', 'Nugget', 'Amendoim', 'Pitufo', 'Cookie', 'Caramelo'],
+  femea: ['Pipoca', 'Minnie', 'Lilo', 'Bolinha', 'Floco', 'Petunia', 'Mochi', 'Lentilha', 'Pimenta', 'Fofinha'],
+  neutro: ['Twister', 'Pipoca', 'Pingo', 'Bolt', 'Minnie', 'Mickey', 'Lilo', 'Bolinha', 'Floco', 'Pitufo']
+};
 
-const nomesAve = [
-  'Blu', 'Zazu', 'Louro', 'Piu-Piu', 'Sky', 'Jade', 'Safira', 'Rio', 
-  'Flash', 'Sol', 'Mel', 'Coco', 'Petúnia', 'Cecília', 'Bob', 
-  'Kiwi', 'Rainbow', 'Sunny', 'Esmeralda', 'Jasmine'
-];
+const nomesAve = {
+  macho: ['Blu', 'Zazu', 'Louro', 'Flash', 'Sol', 'Bob', 'Kiwi', 'Sky', 'Rio', 'Azulão'],
+  femea: ['Jade', 'Safira', 'Piu-Piu', 'Petúnia', 'Cecília', 'Mel', 'Coco', 'Rainbow', 'Sunny', 'Esmeralda'],
+  neutro: ['Blu', 'Zazu', 'Louro', 'Piu-Piu', 'Sky', 'Jade', 'Safira', 'Rio', 'Flash', 'Sol']
+};
 
-const nomesReptil = [
-  'Draco', 'Spike', 'Rex', 'Godzilla', 'Yoshi', 'Rango', 'Crush', 
-  'Flash', 'Ziggy', 'Komodo', 'Nilo', 'Kraken', 'Mushu', 'Scaly', 
-  'Hydra', 'Serpente', 'Scale', 'Cobra', 'Toby', 'Slither'
-];
+const nomesReptil = {
+  macho: ['Draco', 'Spike', 'Rex', 'Godzilla', 'Yoshi', 'Rango', 'Crush', 'Ziggy', 'Komodo', 'Slither'],
+  femea: ['Serpente', 'Hydra', 'Scale', 'Cobra', 'Lagartixa', 'Nila', 'Escama', 'Reptilia', 'Verde', 'Iguana'],
+  neutro: ['Draco', 'Spike', 'Rex', 'Godzilla', 'Yoshi', 'Rango', 'Crush', 'Flash', 'Ziggy', 'Komodo']
+};
 
-const nomesExotico = [
-  'Exótico', 'Safira', 'Rajah', 'Íris', 'Quimera', 'Nebulosa', 'Pandora', 
-  'Django', 'Yoda', 'Aurora', 'Bamboo', 'Winter', 'Storm', 'Enigma', 
-  'Mystic', 'Shadow', 'Cosmos', 'Ozzy', 'Onyx', 'Quest'
-];
+const nomesExotico = {
+  macho: ['Exótico', 'Rajah', 'Django', 'Yoda', 'Bamboo', 'Storm', 'Enigma', 'Cosmos', 'Ozzy', 'Onyx'],
+  femea: ['Safira', 'Íris', 'Quimera', 'Nebulosa', 'Pandora', 'Aurora', 'Winter', 'Mystic', 'Shadow', 'Quest'],
+  neutro: ['Exótico', 'Safira', 'Rajah', 'Íris', 'Quimera', 'Nebulosa', 'Pandora', 'Django', 'Yoda', 'Aurora']
+};
 
 export default function Pets() {
   const [tipoAnimal, setTipoAnimal] = useState('cachorro');
+  const [generoAnimal, setGeneroAnimal] = useState('neutro');
   const [nomeGerado, setNomeGerado] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [modoGerador, setModoGerador] = useState<'tradicional' | 'ia'>('tradicional');
@@ -70,31 +120,31 @@ export default function Pets() {
       
       switch(tipoAnimal) {
         case 'cachorro':
-          listaNomes = nomesCachorro;
+          listaNomes = nomesCachorro[generoAnimal as keyof typeof nomesCachorro];
           break;
         case 'gato':
-          listaNomes = nomesGato;
+          listaNomes = nomesGato[generoAnimal as keyof typeof nomesGato];
           break;
         case 'peixe':
-          listaNomes = nomesPeixe;
+          listaNomes = nomesPeixe[generoAnimal as keyof typeof nomesPeixe];
           break;
         case 'coelho':
-          listaNomes = nomesCoelho;
+          listaNomes = nomesCoelho[generoAnimal as keyof typeof nomesCoelho];
           break;
         case 'roedor':
-          listaNomes = nomesRoedor;
+          listaNomes = nomesRoedor[generoAnimal as keyof typeof nomesRoedor];
           break;
         case 'ave':
-          listaNomes = nomesAve;
+          listaNomes = nomesAve[generoAnimal as keyof typeof nomesAve];
           break;
         case 'reptil':
-          listaNomes = nomesReptil;
+          listaNomes = nomesReptil[generoAnimal as keyof typeof nomesReptil];
           break;
         case 'exotico':
-          listaNomes = nomesExotico;
+          listaNomes = nomesExotico[generoAnimal as keyof typeof nomesExotico];
           break;
         default:
-          listaNomes = nomesCachorro;
+          listaNomes = nomesCachorro.neutro;
       }
       
       const indiceAleatorio = Math.floor(Math.random() * listaNomes.length);
@@ -219,6 +269,44 @@ export default function Pets() {
                   </div>
                 </div>
 
+                <div className="mb-6">
+                  <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                    Gênero
+                  </label>
+                  <div className="flex gap-3">
+                    <button 
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm ${
+                        generoAnimal === 'macho' 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                      }`}
+                      onClick={() => setGeneroAnimal('macho')}
+                    >
+                      Macho
+                    </button>
+                    <button 
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm ${
+                        generoAnimal === 'femea' 
+                          ? 'bg-pink-500 text-white' 
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                      }`}
+                      onClick={() => setGeneroAnimal('femea')}
+                    >
+                      Fêmea
+                    </button>
+                    <button 
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm ${
+                        generoAnimal === 'neutro' 
+                          ? 'bg-purple-500 text-white' 
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                      }`}
+                      onClick={() => setGeneroAnimal('neutro')}
+                    >
+                      Neutro
+                    </button>
+                  </div>
+                </div>
+
                 <button 
                   className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
                   onClick={gerarNome}
@@ -239,7 +327,13 @@ export default function Pets() {
             <NomeDisplay 
               nome={nomeGerado} 
               onGerarNovo={gerarNome}
-              corDestaque="text-blue-600 dark:text-blue-400"
+              corDestaque={
+                generoAnimal === 'macho' 
+                  ? 'text-blue-600 dark:text-blue-400' 
+                  : generoAnimal === 'femea' 
+                    ? 'text-pink-500 dark:text-pink-400'
+                    : 'text-purple-600 dark:text-purple-400'
+              }
               categoria="pets"
             />
           )}
