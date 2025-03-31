@@ -9,30 +9,49 @@ export interface NameGenerationOptions {
   quantidade?: number;
   caracteristicas?: string[];
   evitar?: string[];
+  modo?: 'api' | 'local' | 'hibrido'; // Novo parâmetro para o modo de geração
 }
 
 export interface GeneratedName {
   nome: string;
   significado?: string;
   origem?: string;
+  fonte?: 'api' | 'local'; // Indica a origem do nome
 }
 
 export async function generateNames(options: NameGenerationOptions): Promise<GeneratedName[]> {
+  // Definir o modo de operação (api, local ou híbrido)
+  const modo = options.modo || 
+    (typeof window !== 'undefined' && window.location.search.includes('modo=')) 
+      ? window.location.search.includes('modo=local') 
+        ? 'local'
+        : window.location.search.includes('modo=hibrido') 
+          ? 'hibrido' 
+          : 'api'
+      : 'api';
+
+  // Modo local (fallback) - retorna apenas nomes locais
+  if (modo === 'local' || (typeof window !== 'undefined' && window.location.search.includes('offline=true'))) {
+    return getFallbackNames(options).map(nome => ({...nome, fonte: 'local'}));
+  }
+
   try {
-    // Verificar se devemos pular a chamada à API (modo offline)
-    if (typeof window !== 'undefined' && window.location.search.includes('offline=true')) {
-      return getFallbackNames(options);
-    }
-    
     // Construir o prompt baseado nas opções
     const prompt = buildPrompt(options);
+    const quantidade = options.quantidade || 1;
+    
+    // Se for modo híbrido, solicitar menos nomes da API
+    const apiQuantidade = modo === 'hibrido' ? Math.ceil(quantidade / 2) : quantidade;
     
     const response = await fetch('/api/generate-names', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ prompt, options }),
+      body: JSON.stringify({ 
+        prompt, 
+        options: { ...options, quantidade: apiQuantidade } 
+      }),
     });
 
     if (!response.ok) {
@@ -40,12 +59,35 @@ export async function generateNames(options: NameGenerationOptions): Promise<Gen
     }
 
     const data = await response.json();
-    return data.names;
+    const apiNames = data.names.map((nome: GeneratedName) => ({...nome, fonte: 'api'}));
+    
+    // Modo híbrido - combinar resultados da API com nomes locais
+    if (modo === 'hibrido') {
+      // Obter nomes locais
+      const localQuantidade = Math.max(1, quantidade - apiNames.length);
+      const localOptions = { ...options, quantidade: localQuantidade };
+      const localNames = getFallbackNames(localOptions).map(nome => ({...nome, fonte: 'local'}));
+      
+      // Misturar nomes da API e locais de forma aleatória
+      return shuffleArray([...apiNames, ...localNames]).slice(0, quantidade);
+    }
+    
+    return apiNames;
   } catch (error) {
     console.error('Erro ao gerar nomes:', error);
     // Fallback para nomes estáticos em caso de erro
-    return getFallbackNames(options);
+    return getFallbackNames(options).map(nome => ({...nome, fonte: 'local'}));
   }
+}
+
+// Função auxiliar para embaralhar array (algoritmo Fisher-Yates)
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
 }
 
 /**
@@ -97,11 +139,10 @@ function buildPrompt(options: NameGenerationOptions): string {
  * Fornece nomes estáticos em caso de falha na API ou no modo offline
  */
 export function getFallbackNames(options: NameGenerationOptions): GeneratedName[] {
-  // Filtrar por gênero se for bebês
   let filteredNames: GeneratedName[] = [];
   
   // Para bebês, usar os nomes de acordo com o gênero
-  if (options.categoria === 'bebes' && options.genero) {
+  if (options.categoria === 'bebes') {
     if (options.genero === 'masculino') {
       filteredNames = FALLBACK_NAMES.bebes_masculino;
     } else if (options.genero === 'feminino') {
@@ -112,7 +153,9 @@ export function getFallbackNames(options: NameGenerationOptions): GeneratedName[
     }
   } else {
     // Para outras categorias (pets, jogos, aleatorios)
-    filteredNames = FALLBACK_NAMES[options.categoria] || FALLBACK_NAMES.aleatorios;
+    // Use type assertion para evitar erro de tipagem
+    const categoria = options.categoria as keyof typeof FALLBACK_NAMES;
+    filteredNames = FALLBACK_NAMES[categoria] || FALLBACK_NAMES.aleatorios;
   }
   
   // Selecionar aleatoriamente um número de nomes baseado na quantidade solicitada

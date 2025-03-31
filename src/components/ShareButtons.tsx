@@ -1,6 +1,6 @@
 'use client';
 
-import { Share2, Copy, Check, Mail, Facebook, Send, X, MessageCircle } from 'lucide-react';
+import { Share2, Copy, Check, Mail, Facebook, Send, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 interface ShareButtonsProps {
@@ -127,7 +127,7 @@ export default function ShareButtons({ nome, categoria }: ShareButtonsProps) {
         >
           <div className="p-2">
             <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">
-              Compartilhar "{nome}"
+              Compartilhar &quot;{nome}&quot;
             </h3>
             
             <div className="grid grid-cols-5 gap-2 mb-3">

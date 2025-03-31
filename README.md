@@ -1,73 +1,81 @@
-# Nomeador
+# Nomeador - Gerador de Nomes com IA
 
-Um gerador de nomes para pets, jogos, bebês e muito mais!
+O Nomeador é uma aplicação web que utiliza Inteligência Artificial para gerar nomes criativos para:
 
-## Funcionalidades
+- Pets 🐾
+- Personagens de Jogos 🎮
+- Bebês 👶
+- Nomes aleatórios para qualquer finalidade 🌟
 
-- 🐕 Geração de nomes para pets
-- 🎮 Nomes para personagens de jogos
-- 👶 Nomes para bebês
-- ⚡ Nomes aleatórios para diversos usos
-- ❤️ Salvar nomes favoritos
-- 📊 Histórico de nomes gerados
-- 🧠 Geração inteligente de nomes com IA
-- 📱 Design responsivo
+## Modos de Geração de Nomes
+
+O sistema conta com três modos diferentes de geração de nomes:
+
+### 1. Modo IA (100% IA)
+- Utiliza exclusivamente a API do Hugging Face (modelo Mistral 7B)
+- Máxima criatividade e variedade
+- Requer conexão com a internet
+- Você precisa de uma chave de API do Hugging Face
+
+### 2. Modo Híbrido
+- Combina resultados da API com nomes da biblioteca local
+- Oferece o melhor dos dois mundos: criatividade da IA + velocidade da biblioteca local
+- Funciona parcialmente mesmo com problemas de conexão
+- **Recomendado para a maioria dos usuários**
+
+### 3. Modo Local (Offline)
+- Utiliza apenas a biblioteca local de nomes pré-definidos
+- Mais de 100 nomes disponíveis em diferentes categorias
+- Funciona completamente offline
+- Resposta instantânea, sem latência de API
+
+## Configuração
+
+1. Clone o repositório
+2. Instale as dependências com `npm install`
+3. Copie o arquivo `.env.local.example` para `.env.local`
+4. Obtenha uma chave gratuita da [Hugging Face](https://huggingface.co)
+5. Configure seu arquivo `.env.local`:
+
+```
+# API Hugging Face
+HUGGINGFACE_API_KEY=sua_chave_aqui
+HUGGINGFACE_API_URL=https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2
+
+# Configuração do modo de geração de nomes
+# Valores possíveis: 'api', 'local', 'hibrido'
+DEFAULT_MODE=hibrido
+```
+
+## Como Obter uma Chave da Hugging Face
+
+1. Crie uma conta gratuita em [huggingface.co](https://huggingface.co)
+2. Vá até Settings > Access Tokens
+3. Crie um novo token com permissões de Leitura para acessar modelos públicos
+4. Marque a opção "Make calls to Inference Providers" para poder usar a API
+5. Copie a chave gerada e adicione no seu arquivo `.env.local`
+
+## Executando o Projeto
+
+```bash
+# Iniciar em modo de desenvolvimento
+npm run dev
+
+# Compilar para produção
+npm run build
+
+# Iniciar em modo de produção
+npm start
+```
 
 ## Tecnologias Utilizadas
 
-- [Next.js](https://nextjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Hugging Face API](https://huggingface.co/docs/api-inference/index) (Modelo Mistral)
-
-## Configuração do Ambiente
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/MatheusMoorete/Nomeador.git
-   cd Nomeador
-   ```
-
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-
-3. Configure o arquivo de ambiente:
-   Crie um arquivo `.env.local` na raiz do projeto com o seguinte conteúdo:
-   ```
-   HUGGINGFACE_API_KEY=hf_sua_chave_aqui
-   HUGGINGFACE_API_URL=https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2
-   # Use true para usar apenas nomes locais sem API
-   USE_FALLBACK_NAMES=false
-   ```
-   
-   Para obter sua chave gratuita da Hugging Face:
-   1. Crie uma conta em [huggingface.co](https://huggingface.co/join)
-   2. Vá para [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
-   3. Gere um novo token com permissão de leitura
-
-4. Execute o projeto:
-   ```bash
-   npm run dev
-   ```
-
-5. Acesse o projeto em [http://localhost:3000](http://localhost:3000)
-
-## Características do Gerador de IA
-
-O gerador de nomes com IA permite:
-- Selecionar o gênero (masculino, feminino ou neutro)
-- Escolher a origem (brasileiro, internacional, clássico)
-- Adicionar características desejadas para o nome
-- Visualizar significado e origem dos nomes gerados
-
-### Modo Offline
-
-O projeto também funciona sem API, usando uma lista local de nomes:
-- Configure `USE_FALLBACK_NAMES=true` no arquivo `.env.local`
-- A aplicação usará nomes pré-definidos organizados por categoria
+- Next.js 15
+- TypeScript
+- TailwindCSS
+- Hugging Face API
+- Lucide Icons
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT.
+Este projeto é distribuído sob a licença MIT.

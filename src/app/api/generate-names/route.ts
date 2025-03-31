@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NameGenerationOptions } from '@/services/aiNameGenerator';
+import { getFallbackNames, GeneratedName } from '@/services/aiNameGenerator';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,13 +13,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar se devemos usar os nomes de fallback diretamente
-    if (process.env.USE_FALLBACK_NAMES === 'true') {
-      // Importar diretamente a função para evitar chamadas de API desnecessárias
-      const { getFallbackNames } = await import('@/services/aiNameGenerator');
+    // Verificar se devemos usar os nomes locais diretamente
+    const defaultMode = process.env.DEFAULT_MODE || 'api';
+    const requestMode = options.modo || defaultMode;
+    
+    if (requestMode === 'local') {
       return NextResponse.json({
-        names: getFallbackNames(options),
-        source: 'fallback'
+        names: getFallbackNames(options).map((nome: GeneratedName) => ({...nome, fonte: 'local'})),
+        source: 'local'
       });
     }
 
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
     const apiUrl = process.env.HUGGINGFACE_API_URL || 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2';
     
     if (!apiKey) {
-      console.error("API key não configurada no ambiente");
+      console.error('API key não configurada no ambiente');
       return NextResponse.json(
         { error: 'Configuração da API incompleta' },
         { status: 500 }
@@ -68,29 +69,29 @@ export async function POST(request: NextRequest) {
           : data.generated_text || '';
         
         // Extrair os nomes da resposta de texto
-        const results = processHuggingFaceResponse(responseText, options);
+        const results = processHuggingFaceResponse(responseText)
+          .map((nome: GeneratedName) => ({...nome, fonte: 'api'}));
         
         return NextResponse.json({
           names: results,
           source: 'huggingface'
         });
       } catch (parseError) {
-        console.error("Erro ao processar resposta:", parseError);
+        console.error('Erro ao processar resposta:', parseError);
         throw parseError;
       }
     } catch (apiError) {
-      console.error("Erro na chamada à API:", apiError);
+      console.error('Erro na chamada à API:', apiError);
       
       // Fallback para nomes estáticos em caso de erro
-      const { getFallbackNames } = await import('@/services/aiNameGenerator');
       return NextResponse.json({
-        names: getFallbackNames(options),
+        names: getFallbackNames(options).map((nome: GeneratedName) => ({...nome, fonte: 'local'})),
         source: 'fallback',
         error: 'Erro na API externa, usando nomes locais'
       });
     }
   } catch (error) {
-    console.error("Erro no servidor:", error);
+    console.error('Erro no servidor:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -114,7 +115,7 @@ Nome - Significado - Origem
 /**
  * Processa a resposta do Hugging Face para extrair nomes, significados e origens
  */
-function processHuggingFaceResponse(text: string, options: NameGenerationOptions) {
+function processHuggingFaceResponse(text: string): GeneratedName[] {
   // Remover o prompt da resposta (se estiver presente)
   const promptEnd = text.indexOf('[/INST]');
   const cleanedText = promptEnd > -1 ? text.substring(promptEnd + 8) : text;
