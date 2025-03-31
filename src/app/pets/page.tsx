@@ -134,18 +134,27 @@ export default function Pets() {
   const getDescricaoAnimal = () => {
     if (!nomeGerado) return '';
     
-    const tipoFormatado = {
-      'cachorro': 'cachorro',
-      'gato': 'gato',
-      'peixe': 'peixe',
-      'coelho': 'coelho',
-      'roedor': 'roedor',
-      'ave': 'pássaro',
-      'reptil': 'réptil',
-      'exotico': 'animal exótico'
-    }[tipoAnimal];
+    // Lista de templates de frases para tornar a descrição mais personalizada
+    const templates = [
+      `Geralmente, {nome} são {caracteristica}.`,
+      `{nome} costumam ser {caracteristica}.`,
+      `Pets como {nome} são conhecidos por serem {caracteristica}.`,
+      `{nome} tem a reputação de ser {caracteristica}.`,
+      `Os {nome} do mundo são famosos por serem {caracteristica}.`,
+      `Todo mundo sabe que {nome} adoram ser {caracteristica}.`,
+      `É típico de {nome} serem {caracteristica}.`,
+      `A personalidade de {nome} é {caracteristica}.`,
+      `Quem conhece {nome} sabe que são {caracteristica}.`,
+      `{nome} frequentemente demonstram ser {caracteristica}.`
+    ];
     
-    return `Um ${tipoFormatado} ${nomeGerado.caracteristica}.`;
+    // Escolher um template aleatório
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    
+    // Preencher o template com o nome e a característica
+    return template
+      .replace('{nome}', nomeGerado.nome)
+      .replace('{caracteristica}', nomeGerado.caracteristica);
   };
 
   return (
@@ -319,27 +328,19 @@ export default function Pets() {
           </div>
 
           {modoGerador === 'tradicional' && nomeGerado && (
-            <div className="w-full flex flex-col gap-4">
-              <NomeDisplay 
-                nome={nomeGerado.nome} 
-                onGerarNovo={gerarNome}
-                corDestaque={
-                  generoAnimal === 'macho' 
-                    ? 'text-blue-600 dark:text-blue-400' 
-                    : generoAnimal === 'femea' 
-                      ? 'text-pink-500 dark:text-pink-400'
-                      : 'text-purple-600 dark:text-purple-400'
-                }
-                categoria="pets"
-              />
-              
-              {/* Bloco para mostrar a característica */}
-              <div className="w-full bg-[#1e293b] rounded-xl shadow-md p-4 mt-2">
-                <p className="text-gray-300 text-center">
-                  <span className="font-semibold">Personalidade:</span> {getDescricaoAnimal()}
-                </p>
-              </div>
-            </div>
+            <NomeDisplay 
+              nome={nomeGerado.nome} 
+              caracteristica={getDescricaoAnimal()}
+              onGerarNovo={gerarNome}
+              corDestaque={
+                generoAnimal === 'macho' 
+                  ? 'text-blue-600 dark:text-blue-400' 
+                  : generoAnimal === 'femea' 
+                    ? 'text-pink-500 dark:text-pink-400'
+                    : 'text-purple-600 dark:text-purple-400'
+              }
+              categoria="pets"
+            />
           )}
         </div>
       </main>
