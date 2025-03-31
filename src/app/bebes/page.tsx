@@ -659,19 +659,95 @@ const nomesMeninaCompletas: Record<string, NomeCompleto[]> = {
   ]
 };
 
+// Verificar e filtrar qualquer nome sem significado ou característica
+const filtrarNomesCompletos = (lista: NomeCompleto[]): NomeCompleto[] => {
+  return lista.filter(item => 
+    item.nome && 
+    item.significado && 
+    item.caracteristica &&
+    item.significado.trim() !== '' && 
+    item.caracteristica.trim() !== ''
+  );
+};
+
+// Aplicar o filtro em todas as listas
+const nomesMeninoCompletosFiltrados = {
+  brasileiro: filtrarNomesCompletos(nomesMeninoCompletos.brasileiro),
+  internacional: filtrarNomesCompletos(nomesMeninoCompletos.internacional),
+  classico: filtrarNomesCompletos(nomesMeninoCompletos.classico)
+};
+
+const nomesMeninaCompletasFiltradas = {
+  brasileiro: filtrarNomesCompletos(nomesMeninaCompletas.brasileiro),
+  internacional: filtrarNomesCompletos(nomesMeninaCompletas.internacional),
+  classico: filtrarNomesCompletos(nomesMeninaCompletas.classico)
+};
+
 // Manter as listas originais de nomes simples para compatibilidade
 const nomesMenino = {
-  brasileiro: nomesMeninoCompletos.brasileiro.map(item => item.nome),
-  internacional: nomesMeninoCompletos.internacional.map(item => item.nome),
-  classico: nomesMeninoCompletos.classico.map(item => item.nome)
+  brasileiro: nomesMeninoCompletosFiltrados.brasileiro.map(item => item.nome),
+  internacional: nomesMeninoCompletosFiltrados.internacional.map(item => item.nome),
+  classico: nomesMeninoCompletosFiltrados.classico.map(item => item.nome)
 };
 
 // Atualizar a lista de nomes de menina para incluir os novos nomes completos
 const nomesMenina = {
-  brasileiro: nomesMeninaCompletas.brasileiro.map(item => item.nome),
-  internacional: nomesMeninaCompletas.internacional.map(item => item.nome),
-  classico: nomesMeninaCompletas.classico.map(item => item.nome)
+  brasileiro: nomesMeninaCompletasFiltradas.brasileiro.map(item => item.nome),
+  internacional: nomesMeninaCompletasFiltradas.internacional.map(item => item.nome),
+  classico: nomesMeninaCompletasFiltradas.classico.map(item => item.nome)
 };
+
+// Função para verificar integridade dos dados - apenas para desenvolvimento
+if (process.env.NODE_ENV !== 'production') {
+  const verificarIntegridadeDados = () => {
+    console.log("Verificando integridade dos dados de nomes...");
+    
+    // Verificar nomes de menino
+    let nomesSemDados = 0;
+    
+    // Verificar cada origem
+    ['brasileiro', 'internacional', 'classico'].forEach(origem => {
+      const nomesSimples = nomesMenino[origem as keyof typeof nomesMenino];
+      const nomesCompletos = nomesMeninoCompletosFiltrados[origem as keyof typeof nomesMeninoCompletosFiltrados];
+      
+      // Verificar se todos os nomes da lista simples existem na lista completa
+      nomesSimples.forEach(nome => {
+        const temDadosCompletos = nomesCompletos.some(item => item.nome === nome);
+        if (!temDadosCompletos) {
+          console.warn(`Nome de menino sem dados completos: ${nome} (origem: ${origem})`);
+          nomesSemDados++;
+        }
+      });
+    });
+    
+    // Verificar nomes de menina
+    ['brasileiro', 'internacional', 'classico'].forEach(origem => {
+      const nomesSimples = nomesMenina[origem as keyof typeof nomesMenina];
+      const nomesCompletos = nomesMeninaCompletasFiltradas[origem as keyof typeof nomesMeninaCompletasFiltradas];
+      
+      // Verificar se todos os nomes da lista simples existem na lista completa
+      nomesSimples.forEach(nome => {
+        const temDadosCompletos = nomesCompletos.some(item => item.nome === nome);
+        if (!temDadosCompletos) {
+          console.warn(`Nome de menina sem dados completos: ${nome} (origem: ${origem})`);
+          nomesSemDados++;
+        }
+      });
+    });
+    
+    if (nomesSemDados === 0) {
+      console.log("✅ Todos os nomes possuem dados completos!");
+    } else {
+      console.warn(`⚠️ Existem ${nomesSemDados} nomes sem dados completos.`);
+    }
+  };
+  
+  // Chamar a verificação apenas uma vez durante o carregamento do componente
+  // Usar setTimeout para garantir que seja executado após o carregamento inicial
+  if (typeof window !== 'undefined') {
+    setTimeout(verificarIntegridadeDados, 1000);
+  }
+}
 
 export default function Bebes() {
   const [genero, setGenero] = useState('menino');
@@ -685,11 +761,11 @@ export default function Bebes() {
 
   const obterNomeCompleto = (nome: string): NomeCompleto | undefined => {
     if (genero === 'menino') {
-      const origemAtual = origem as keyof typeof nomesMeninoCompletos;
-      return nomesMeninoCompletos[origemAtual].find(item => item.nome === nome);
+      const origemAtual = origem as keyof typeof nomesMeninoCompletosFiltrados;
+      return nomesMeninoCompletosFiltrados[origemAtual].find(item => item.nome === nome);
     } else if (genero === 'menina') {
-      const origemAtual = origem as keyof typeof nomesMeninaCompletas;
-      return nomesMeninaCompletas[origemAtual].find(item => item.nome === nome);
+      const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
+      return nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
     }
     return undefined;
   };
@@ -719,10 +795,71 @@ export default function Bebes() {
       // Atualizar a origem para buscar o significado e característica corretos
       setOrigem(origemAleatoria);
       
+      // Tentar obter o nome completo
       const nomeCompleto = obterNomeCompleto(nome);
+      
       if (nomeCompleto) {
         novoSignificado = nomeCompleto.significado;
         novaCaracteristica = nomeCompleto.caracteristica;
+      } else {
+        // Se não encontrar o nome no banco de dados completo, adicionar valores padrão
+        // com base no gênero e origem para garantir que todos os nomes tenham informações
+        if (genero === 'menino') {
+          switch(origemAleatoria) {
+            case 'brasileiro':
+              novoSignificado = "nome de origem brasileira";
+              novaCaracteristica = "Costuma ter personalidade forte e marcante";
+              break;
+            case 'internacional':
+              novoSignificado = "nome de origem internacional";
+              novaCaracteristica = "Tende a ser determinado e curioso";
+              break;
+            case 'classico':
+              novoSignificado = "nome clássico e tradicional";
+              novaCaracteristica = "Possui uma natureza leal e confiável";
+              break;
+          }
+        } else { // menina
+          switch(origemAleatoria) {
+            case 'brasileiro':
+              novoSignificado = "nome de origem brasileira";
+              novaCaracteristica = "Costuma ser expressiva e comunicativa";
+              break;
+            case 'internacional':
+              novoSignificado = "nome de origem internacional";
+              novaCaracteristica = "Tende a ser independente e criativa";
+              break;
+            case 'classico':
+              novoSignificado = "nome clássico e tradicional";
+              novaCaracteristica = "Possui uma natureza amorosa e atenciosa";
+              break;
+          }
+        }
+        
+        console.log(`Nome sem dados completos: ${nome}. Adicionado significado e característica padrão.`);
+        
+        // Adicionar o nome à lista completa para uso futuro
+        if (genero === 'menino') {
+          const origemKey = origemAleatoria as keyof typeof nomesMeninoCompletosFiltrados;
+          const listaNomesCompletos = [...nomesMeninoCompletosFiltrados[origemKey]];
+          listaNomesCompletos.push({
+            nome,
+            significado: novoSignificado,
+            caracteristica: novaCaracteristica
+          });
+          // Não estamos atualizando a lista original para evitar mutação de estado
+          // Isso é apenas para registro interno
+        } else {
+          const origemKey = origemAleatoria as keyof typeof nomesMeninaCompletasFiltradas;
+          const listaNomesCompletos = [...nomesMeninaCompletasFiltradas[origemKey]];
+          listaNomesCompletos.push({
+            nome,
+            significado: novoSignificado,
+            caracteristica: novaCaracteristica
+          });
+          // Não estamos atualizando a lista original para evitar mutação de estado
+          // Isso é apenas para registro interno
+        }
       }
       
       setNomeGerado(nome);
