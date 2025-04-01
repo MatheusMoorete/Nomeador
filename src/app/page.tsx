@@ -17,14 +17,14 @@ export default function Home() {
   
   return (
     <PageTransition>
-      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-        <Header />
-        
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+      <Header />
+      
         <main className="flex-grow flex flex-col items-center w-full max-w-5xl px-4 mx-auto py-8">
           <section className="text-center mb-12">
-            <h1 className="text-5xl sm:text-6xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+        <h1 className="text-5xl sm:text-6xl font-bold text-blue-600 dark:text-blue-400 mb-4">
               {getSiteName()}
-            </h1>
+        </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
               {t('site.description')}
             </p>
@@ -46,38 +46,38 @@ export default function Home() {
           
           <section className="w-full max-w-3xl">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mb-12">
-              <Link 
-                href="/pets" 
+          <Link 
+            href="/pets" 
                 className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-8 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center h-40"
                 aria-label="Ir para gerador de nomes para pets"
-              >
+          >
                 <PawPrint className="h-10 w-10 mb-2" aria-hidden="true" />
                 <span className="text-lg font-bold">{t('nav.pets')}</span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 px-2 text-center">{t('card.pets.subtitle')}</span>
-              </Link>
-              
-              <Link 
-                href="/jogos" 
+          </Link>
+          
+          <Link 
+            href="/jogos" 
                 className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-8 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center h-40"
                 aria-label="Ir para gerador de nomes para jogos"
-              >
+          >
                 <Gamepad2 className="h-10 w-10 mb-2" aria-hidden="true" />
                 <span className="text-lg font-bold">{t('nav.games')}</span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 px-2 text-center">{t('card.games.subtitle')}</span>
-              </Link>
-              
-              <Link 
-                href="/bebes" 
+          </Link>
+          
+          <Link 
+            href="/bebes" 
                 className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-8 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center h-40"
                 aria-label="Ir para gerador de nomes para bebês"
-              >
+          >
                 <Baby className="h-10 w-10 mb-2" aria-hidden="true" />
                 <span className="text-lg font-bold">{t('nav.babies')}</span>
                 <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 px-2 text-center">{t('card.babies.subtitle')}</span>
-              </Link>
-              
-              <Link 
-                href="/aleatorios" 
+          </Link>
+          
+          <Link 
+            href="/aleatorios" 
                 className="bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-blue-400 font-semibold py-8 px-4 rounded-xl shadow-md transition-all transform hover:scale-105 flex flex-col items-center justify-center h-40"
                 aria-label="Ir para gerador de nomes aleatórios"
               >
@@ -215,8 +215,8 @@ export default function Home() {
               </Link>
               <Link href="/aleatorios" className="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-lg text-sm transition-colors">
                 Nomes para empresas
-              </Link>
-            </div>
+          </Link>
+        </div>
           </section>
           
           <section className="w-full max-w-4xl mb-12">
@@ -317,10 +317,10 @@ export default function Home() {
               </div>
             </div>
           </section>
-        </main>
-        
-        <Footer />
-      </div>
+      </main>
+      
+      <Footer />
+    </div>
     </PageTransition>
   );
 }

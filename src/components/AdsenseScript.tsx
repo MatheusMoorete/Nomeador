@@ -7,7 +7,9 @@ export default function AdsenseScript() {
     <Script
       id="adsense-script"
       async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxx"
+      // Substitua 'ca-pub-xxxxxxxxxxxx' pelo seu ID de publicador real do AdSense
+      // fornecido quando sua conta for aprovada
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6450827090404321"
       crossOrigin="anonymous"
       strategy="lazyOnload"
     />

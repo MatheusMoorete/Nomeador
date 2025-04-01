@@ -1606,25 +1606,25 @@ export default function Bebes() {
 
   return (
     <PageTransition>
-      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-        <Header />
-        
-        <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
-          <div className="max-w-2xl w-full">
-            <h1 className="text-4xl sm:text-5xl font-bold text-pink-600 dark:text-pink-400 mb-4 text-center">
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+      <Header />
+      
+      <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
+        <div className="max-w-2xl w-full">
+          <h1 className="text-4xl sm:text-5xl font-bold text-pink-600 dark:text-pink-400 mb-4 text-center">
               {t('nav.babies')}
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
               {language === 'pt' ? 'Encontre o nome perfeito para o novo membro da família' : 
                language === 'en' ? 'Find the perfect name for the new family member' : 
                'Encuentra el nombre perfecto para el nuevo miembro de la familia'}
-            </p>
+          </p>
 
-            <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
-              <div className="mb-6">
+          <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+            <div className="mb-6">
                 <div className="flex justify-center mb-6">
                   <div className="inline-flex rounded-md shadow-sm" role="group">
-                    <button
+                <button 
                       type="button"
                       className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-l-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
                         modoGerador === 'tradicional' 
@@ -1636,8 +1636,8 @@ export default function Bebes() {
                       {language === 'pt' ? 'Gerador Simples' : 
                        language === 'en' ? 'Simple Generator' : 
                        'Generador Simple'}
-                    </button>
-                    <button
+                </button>
+                <button 
                       type="button"
                       className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-r-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
                         modoGerador === 'ia' 
@@ -1649,63 +1649,63 @@ export default function Bebes() {
                       {language === 'pt' ? 'Gerador Inteligente' : 
                        language === 'en' ? 'Smart Generator' : 
                        'Generador Inteligente'}
-                    </button>
+                </button>
                   </div>
-                </div>
-
+              </div>
+              
                 {modoGerador === 'tradicional' ? (
                   <>
-                <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
                   {language === 'pt' ? 'Gênero' : 
                    language === 'en' ? 'Gender' : 
                    'Género'}
-                </label>
+              </label>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <button 
+                <button 
                     className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
                       ? 'bg-blue-500 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
                     onClick={() => setGenero('menino')}
-                  >
+                >
                     {language === 'pt' ? 'Menino' : 
                      language === 'en' ? 'Boy' : 
                      'Niño'}
-                  </button>
-                  <button 
+                </button>
+                <button 
                     className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menina' 
                       ? 'bg-pink-500 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
                     onClick={() => setGenero('menina')}
-                  >
+                >
                     {language === 'pt' ? 'Menina' : 
                      language === 'en' ? 'Girl' : 
                      'Niña'}
-                  </button>
-                  <button 
+                </button>
+                <button 
                     className={`flex-1 px-4 py-2 rounded-lg ${genero === 'neutro' 
                       ? 'bg-purple-500 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
                     onClick={() => setGenero('neutro')}
-                  >
+                >
                     {language === 'pt' ? 'Neutro' : 
                      language === 'en' ? 'Neutral' : 
                      'Neutro'}
-                  </button>
-              </div>
+                </button>
+            </div>
 
-              <button 
+            <button 
                       className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
-                  genero === 'menino' 
-                    ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                genero === 'menino' 
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
                     : genero === 'menina'
                       ? 'bg-pink-500 hover:bg-pink-600 text-white'
                       : 'bg-purple-500 hover:bg-purple-600 text-white'
-                }`}
-                onClick={gerarNome}
-                disabled={isGenerating}
-              >
+              }`}
+              onClick={gerarNome}
+              disabled={isGenerating}
+            >
                 {isGenerating ? t('button.generating') : t('button.generate')}
-              </button>
+            </button>
                   </>
                 ) : (
                   <AINameGenerator 
@@ -1720,12 +1720,12 @@ export default function Bebes() {
                   />
                 )}
               </div>
-            </div>
+          </div>
 
             {modoGerador === 'tradicional' && nomeGerado && (
               <div className="w-full flex flex-col gap-2">
-                <NomeDisplay 
-                  nome={nomeGerado} 
+              <NomeDisplay 
+                nome={nomeGerado} 
                   caracteristica={dadosCompletos && dadosCompletos.significado && dadosCompletos.caracteristica 
                     ? `${language === 'pt' ? 'Significado' : 
                          language === 'en' ? 'Meaning' : 
@@ -1742,27 +1742,27 @@ export default function Bebes() {
                              language === 'en' ? 'Characteristic' : 
                              'Característica'}: ${dadosCompletos.caracteristica}`
                         : ''}
-                  onGerarNovo={gerarNome}
-                  corDestaque={genero === 'menino' 
-                    ? 'text-blue-500 dark:text-blue-400' 
+                onGerarNovo={gerarNome}
+                corDestaque={genero === 'menino' 
+                  ? 'text-blue-500 dark:text-blue-400' 
                     : genero === 'menina'
                       ? 'text-pink-500 dark:text-pink-400'
                       : 'text-purple-500 dark:text-purple-400'}
-                  mostrarAnuncio={false}
-                  categoria="bebes"
+                mostrarAnuncio={false}
+                categoria="bebes"
                   textoBotaoGerar={t('button.generate.another')}
                 />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
 
           <div className="w-full max-w-2xl mt-8">
             <AdBanner adSlot="bebes-footer" />
-          </div>
-        </main>
-        
-        <Footer />
-      </div>
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
     </PageTransition>
   );
 } 

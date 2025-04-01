@@ -316,8 +316,8 @@ export default function Jogos() {
             // Estilo científico: nomes científicos de plantas, animais, etc.
             nomeCientifico = gerarNomeCientifico();
             resultado = nomeCientifico.cientifico;
-            break;
-            
+          break;
+          
         default:
           resultado = 'GamerPro123';
       }
@@ -351,19 +351,19 @@ export default function Jogos() {
 
   return (
     <PageTransition>
-      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-        <Header />
-        
-        <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
-          <div className="max-w-2xl w-full">
-            <h1 className="text-4xl sm:text-5xl font-bold text-indigo-600 dark:text-indigo-400 mb-4 text-center">
-              Nicknames para Jogos
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
-              Crie um nickname épico para dominar nos seus jogos favoritos
-            </p>
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+      <Header />
+      
+      <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
+        <div className="max-w-2xl w-full">
+          <h1 className="text-4xl sm:text-5xl font-bold text-indigo-600 dark:text-indigo-400 mb-4 text-center">
+            Nicknames para Jogos
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
+            Crie um nickname épico para dominar nos seus jogos favoritos
+          </p>
 
-            <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+          <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
               {/* Alternar entre gerador tradicional e IA */}
               <div className="flex justify-center mb-6">
                 <div className="inline-flex rounded-md shadow-sm" role="group">
@@ -393,59 +393,59 @@ export default function Jogos() {
               </div>
 
               {modoGerador === 'tradicional' ? (
-              <div className="mb-6">
-                <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                  Estilo do Nickname
-                </label>
+            <div className="mb-6">
+              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                Estilo do Nickname
+              </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
                     <div>
-                  <button 
+                <button 
                         className={`w-full px-4 py-2 rounded-lg ${estilo === 'composto' 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                    onClick={() => setEstilo('composto')}
-                  >
-                    Composto
-                  </button>
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setEstilo('composto')}
+                >
+                  Composto
+                </button>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Combina dois elementos impactantes
                       </p>
                     </div>
                     <div>
-                  <button 
+                <button 
                         className={`w-full px-4 py-2 rounded-lg ${estilo === 'epico' 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                    onClick={() => setEstilo('epico')}
-                  >
-                    Épico
-                  </button>
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setEstilo('epico')}
+                >
+                  Épico
+                </button>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Palavras poderosas de uma única peça
                       </p>
                     </div>
                     <div>
-                  <button 
+                <button 
                         className={`w-full px-4 py-2 rounded-lg ${estilo === 'competitivo' 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                    onClick={() => setEstilo('competitivo')}
-                  >
-                    Competitivo
-                  </button>
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setEstilo('competitivo')}
+                >
+                  Competitivo
+                </button>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Combina palavras com números
                       </p>
                     </div>
                     <div>
-                  <button 
+                <button 
                         className={`w-full px-4 py-2 rounded-lg ${estilo === 'simbolos' 
-                      ? 'bg-indigo-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                    onClick={() => setEstilo('simbolos')}
-                  >
-                    Com Símbolos
-                  </button>
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                  onClick={() => setEstilo('simbolos')}
+                >
+                  Com Símbolos
+                </button>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Adiciona caracteres especiais
                       </p>
@@ -565,7 +565,7 @@ export default function Jogos() {
                     >
                       Terror
                     </button>
-                  </div>
+            </div>
 
                   {/* Opções adicionais */}
                   {estilo !== 'leet' && estilo !== 'competitivo' && estilo !== 'simbolos' && estilo !== 'cientifico' && (
@@ -591,13 +591,13 @@ export default function Jogos() {
                     </div>
                   )}
 
-              <button 
+            <button 
                     className="w-full mt-6 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors"
-                onClick={gerarNickname}
-                disabled={isGenerating}
-              >
-                {isGenerating ? 'Gerando...' : 'Gerar Nickname'}
-              </button>
+              onClick={gerarNickname}
+              disabled={isGenerating}
+            >
+              {isGenerating ? 'Gerando...' : 'Gerar Nickname'}
+            </button>
                 </div>
               ) : (
                 <AINameGenerator 
@@ -605,16 +605,16 @@ export default function Jogos() {
                   generoInicial="neutro"
                 />
               )}
-            </div>
+          </div>
 
             {modoGerador === 'tradicional' && nicknameGerado && (
               <div className="space-y-4">
-              <NomeDisplay 
-                nome={nicknameGerado} 
-                onGerarNovo={gerarNickname}
-                corDestaque="text-indigo-600 dark:text-indigo-400"
-                textoBotaoGerar="Gerar outro nickname"
-                categoria="jogos"
+            <NomeDisplay 
+              nome={nicknameGerado} 
+              onGerarNovo={gerarNickname}
+              corDestaque="text-indigo-600 dark:text-indigo-400"
+              textoBotaoGerar="Gerar outro nickname"
+              categoria="jogos"
                   caracteristica={estilo === 'cientifico' && nomePopular ? `Nome Popular: ${nomePopular}` : undefined}
                 />
                 
@@ -637,12 +637,12 @@ export default function Jogos() {
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        </main>
-        
-        <Footer />
-      </div>
+          )}
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
     </PageTransition>
   );
 } 

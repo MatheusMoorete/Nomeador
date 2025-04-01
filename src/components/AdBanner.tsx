@@ -11,8 +11,10 @@ interface AdBannerProps {
 }
 
 export default function AdBanner({
+  // Substitua 'yyyyyyyyyy' pelos IDs de slot reais fornecidos pelo AdSense
   adSlot = 'yyyyyyyyyy',
-  adClient = 'ca-pub-xxxxxxxxxxxx',
+  // Substitua 'ca-pub-xxxxxxxxxxxx' pelo seu ID de publicador real
+  adClient = 'ca-pub-6450827090404321',
   adFormat = 'auto',
   fullWidthResponsive = true,
   className = ''

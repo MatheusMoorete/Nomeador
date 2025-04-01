@@ -118,6 +118,14 @@ export default function RootLayout({
         {/* Script do Google AdSense */}
         <AdsenseScript />
         
+        {/* 
+          Código de verificação do Google AdSense
+          Substitua o comentário abaixo pelo código de meta tag fornecido pelo Google AdSense
+          durante o processo de verificação do seu site
+          Exemplo: <meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxxxxxx" />
+        */}
+        <meta name="google-adsense-account" content="ca-pub-6450827090404321" />
+        
         {/* Preload principais recursos */}
         <link rel="preload" href="/android-chrome-192x192.png" as="image" />
         <link rel="preload" href="/favicon-32x32.png" as="image" />
