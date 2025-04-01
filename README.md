@@ -1,6 +1,6 @@
-# Nomeador - Gerador de Nomes com IA
+# Nomeador / Nominator - Gerador de Nomes com IA
 
-O Nomeador é uma aplicação web que utiliza Inteligência Artificial para gerar nomes criativos para:
+O Nomeador (Nominator em inglês) é uma aplicação web que utiliza Inteligência Artificial para gerar nomes criativos para:
 
 - Pets 🐾
 - Personagens de Jogos 🎮

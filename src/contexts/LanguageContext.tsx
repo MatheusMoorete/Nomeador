@@ -37,6 +37,12 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.random': 'Aleatórios',
     'nav.favorites': 'Favoritos',
 
+    // Subtítulos dos cards
+    'card.pets.subtitle': 'Nomes criativos para seu animal de estimação',
+    'card.games.subtitle': 'Apelidos e tags para jogadores',
+    'card.babies.subtitle': 'Inspiração para nomes de bebês',
+    'card.random.subtitle': 'Nomes únicos para qualquer finalidade',
+
     // Botões e ações
     'button.generate': 'Gerar Nome',
     'button.generating': 'Gerando...',
@@ -90,7 +96,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   en: {
     // General interface texts
-    'site.title': 'Name Generator',
+    'site.title': 'Nominator - Name Generator',
     'site.description': 'Generate names for pets, games, babies and more!',
 
     // Menu and navigation
@@ -100,6 +106,12 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.babies': 'Babies',
     'nav.random': 'Random',
     'nav.favorites': 'Favorites',
+    
+    // Card subtitles
+    'card.pets.subtitle': 'Creative names for your pet',
+    'card.games.subtitle': 'Nicknames and tags for gamers',
+    'card.babies.subtitle': 'Inspiration for baby names',
+    'card.random.subtitle': 'Unique names for any purpose',
 
     // Buttons and actions
     'button.generate': 'Generate Name',
@@ -164,6 +176,12 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.babies': 'Bebés',
     'nav.random': 'Aleatorios',
     'nav.favorites': 'Favoritos',
+    
+    // Subtítulos de tarjetas
+    'card.pets.subtitle': 'Nombres creativos para tu mascota',
+    'card.games.subtitle': 'Apodos y tags para jugadores',
+    'card.babies.subtitle': 'Inspiración para nombres de bebés',
+    'card.random.subtitle': 'Nombres únicos para cualquier propósito',
 
     // Botones y acciones
     'button.generate': 'Generar Nombre',
@@ -256,7 +274,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
         // Podemos usar um pequeno timeout para garantir que o localStorage seja atualizado
         setTimeout(() => {
           // Em vez de recarregar a página, vamos fazer uma mudança de estado que propague
-          setLanguageState(prevLang => {
+          setLanguageState(() => {
             // Mantém o mesmo valor, mas força uma re-renderização
             return lang;
           });

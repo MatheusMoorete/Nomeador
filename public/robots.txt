@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /api/*
+
+# Host
+Host: https://www.nomeador.com
+
+# Sitemaps
+Sitemap: https://www.nomeador.com/sitemap.xml
+Sitemap: https://www.nomeador.com/sitemap-0.xml

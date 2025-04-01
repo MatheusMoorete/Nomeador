@@ -5,6 +5,9 @@ import NomeDisplay from '@/components/NomeDisplay';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AdBanner from '@/components/AdBanner';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getRandomNameData, RandomNameData } from '@/data/randomNames';
+import PageTransition from '@/components/PageTransition';
 
 // Função para capitalizar primeira letra
 const capitalizar = (palavra: string) => {
@@ -21,125 +24,60 @@ const obterElementoAleatorio = (array: string[]) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-// Listas ampliadas de palavras para compor nomes aleatórios
-const substantivos = [
-  'Sol', 'Lua', 'Estrela', 'Mar', 'Céu', 'Terra', 'Fogo', 'Água', 'Vento', 'Pedra',
-  'Onda', 'Flor', 'Folha', 'Raio', 'Montanha', 'Rio', 'Nuvem', 'Trovão', 'Cristal', 'Tempestade',
-  'Oceano', 'Floresta', 'Deserto', 'Ilha', 'Vulcão', 'Arco', 'Esmeralda', 'Safira', 'Rubi', 'Diamante',
-  'Dragão', 'Lince', 'Falcão', 'Águia', 'Lobo', 'Tigre', 'Leão', 'Pantera', 'Serpente', 'Fênix',
-  'Cruzado', 'Caçador', 'Guardião', 'Mago', 'Guerreiro', 'Paladino', 'Arqueiro', 'Druida', 'Xamã', 'Oráculo'
-];
-
-const adjetivos = [
-  'Dourado', 'Prateado', 'Brilhante', 'Luminoso', 'Colorido', 'Reluzente', 'Resplandecente', 'Radiante',
-  'Majestoso', 'Cintilante', 'Flamejante', 'Sereno', 'Intenso', 'Harmônico', 'Eterno', 
-  'Místico', 'Infinito', 'Sublime', 'Celestial', 'Ancestral', 'Veloz', 'Ágil', 'Forte',
-  'Sábio', 'Audaz', 'Valoroso', 'Astuto', 'Feroz', 'Nobre', 'Leal', 'Justo', 'Gentil',
-  'Tenaz', 'Bravo', 'Sagrado', 'Divino', 'Selvagem', 'Elegante', 'Gracioso', 'Impetuoso'
-];
-
-const verbos = [
-  'Voar', 'Brilhar', 'Correr', 'Dançar', 'Cantar', 'Nadar', 'Saltar', 'Girar',
-  'Flutuar', 'Pulsar', 'Iluminar', 'Vibrar', 'Florescer', 'Crescer', 'Elevar',
-  'Resplandecer', 'Transformar', 'Explorar', 'Despertar', 'Transcender',
-  'Conquistar', 'Dominar', 'Comandar', 'Governar', 'Liderar', 'Proteger', 'Defender',
-  'Lutar', 'Vencer', 'Superar', 'Desbravar', 'Forjar', 'Criar', 'Moldar', 'Construir'
-];
-
-const sufixosCriativos = [
-  'ian', 'tron', 'zoid', 'ex', 'or', 'ar', 'ix', 'ax', 'on', 'us',
-  'ius', 'ator', 'ium', 'era', 'ius', 'yum', 'tor', 'tus', 'lith', 'os',
-  'alis', 'arium', 'icus', 'anth', 'aris', 'elis', 'oris', 'urus', 'antis', 'onis',
-  'enth', 'oros', 'ira', 'ella', 'ana', 'ina', 'essa', 'ande', 'ium', 'antum'
-];
-
-const prefixosCriativos = [
-  'Neo', 'Mega', 'Aero', 'Cyber', 'Ultra', 'Meta', 'Hyper', 'Astro', 'Quantum', 'Cosmo',
-  'Tele', 'Tera', 'Bio', 'Geo', 'Techno', 'Xeno', 'Ecto', 'Proto', 'Cryo', 'Omni',
-  'Archi', 'Digi', 'Eco', 'Electro', 'Helio', 'Hydro', 'Infra', 'Macro', 'Micro', 'Multi',
-  'Nano', 'Para', 'Poly', 'Pyro', 'Super', 'Sync', 'Thermo', 'Tri', 'Uni', 'Zero'
-];
-
-const silabas = [
-  'ka', 'ra', 'ta', 'ki', 'ru', 'tu', 'ke', 're', 'ti', 'ko',
-  'ma', 'na', 'pa', 'la', 'sa', 'ja', 'ba', 'za', 'ga', 'va',
-  'me', 'ne', 'pe', 'le', 'se', 'je', 'be', 'ze', 'ge', 've',
-  'mi', 'ni', 'pi', 'li', 'si', 'ji', 'bi', 'zi', 'gi', 'vi',
-  'mo', 'no', 'po', 'lo', 'so', 'jo', 'bo', 'zo', 'go', 'vo'
-];
-
-// Novas listas para tipos adicionais
-const elementosNatureza = [
-  'Terra', 'Água', 'Fogo', 'Ar', 'Éter', 'Raio', 'Gelo', 'Lava', 'Madeira', 'Metal',
-  'Luz', 'Sombra', 'Trevas', 'Névoa', 'Poeira', 'Tempestade', 'Trovão', 'Relâmpago',
-  'Areia', 'Cristal', 'Rocha', 'Neblina', 'Vapor', 'Vento', 'Brisa', 'Tornado', 'Furacão'
-];
-
-const mitologiaEntidades = [
-  'Titã', 'Deus', 'Deusa', 'Semideus', 'Herói', 'Oráculo', 'Sílfide', 'Ninfa', 'Fada',
-  'Valquíria', 'Druida', 'Xamã', 'Vidente', 'Profeta', 'Espectro', 'Elemental', 'Ancião',
-  'Guardião', 'Sentinela', 'Arauto', 'Paladino', 'Avatar', 'Lenda', 'Mito', 'Espírito'
-];
-
-const cores = [
-  'Vermelho', 'Azul', 'Verde', 'Amarelo', 'Roxo', 'Laranja', 'Turquesa', 'Violeta',
-  'Índigo', 'Carmesim', 'Esmeralda', 'Safira', 'Rubi', 'Âmbar', 'Jade', 'Obsidiana',
-  'Prata', 'Ouro', 'Bronze', 'Cobre', 'Marfim', 'Ébano', 'Prismático', 'Iridescente'
-];
-
-const numerosFantasia = [
-  'Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete', 'Oito', 'Nove', 'Dez',
-  'Zero', 'Cem', 'Mil', 'Primeiro', 'Último', 'Prime', 'Dual', 'Triple', 'Quad', 'Alpha',
-  'Omega', 'Delta', 'Beta', 'Sigma', 'Infinito', 'Eterno', 'Único', 'Singular', 'Múltiplo'
-];
-
 // Função para gerar um nome baseado em estilo de mídia popular
-const gerarNomeMidia = () => {
+const gerarNomeMidia = (data: RandomNameData) => {
   const estilos = [
     // Estilo espacial (Star Wars, Star Trek)
     () => {
-      const prefixos = ['Star', 'Cosmo', 'Galaxy', 'Astro', 'Nova', 'Stellar', 'Orion', 'Nebula'];
-      const sufixos = ['Walker', 'Rider', 'Voyager', 'Trek', 'Journey', 'Quest', 'Hunter', 'Seeker'];
+      const prefixos = data.midia.espacial.prefixos;
+      const sufixos = data.midia.espacial.sufixos;
       return `${obterElementoAleatorio(prefixos)} ${obterElementoAleatorio(sufixos)}`;
     },
     // Estilo medieval/fantasia (Game of Thrones, Lord of the Rings)
     () => {
-      const titulos = ['Lord', 'Lady', 'Knight', 'Master', 'Elder', 'King', 'Queen', 'Prince'];
-      const locais = ['Realm', 'Kingdom', 'Land', 'Castle', 'Throne', 'Crown', 'Tower', 'Keep'];
+      const titulos = data.midia.medieval.titulos;
+      const locais = data.midia.medieval.locais;
       return `${obterElementoAleatorio(titulos)} of the ${obterElementoAleatorio(locais)}`;
     },
     // Estilo cyberpunk/futurista
     () => {
-      const prefixos = ['Neo', 'Cyber', 'Digital', 'Tech', 'Synth', 'Bio', 'Mech', 'Chrome'];
-      const sufixos = ['Punk', 'Wave', 'Runner', 'Mind', 'Edge', 'Core', 'Net', 'Link'];
+      const prefixos = data.midia.cyberpunk.prefixos;
+      const sufixos = data.midia.cyberpunk.sufixos;
       return `${obterElementoAleatorio(prefixos)}${obterElementoAleatorio(sufixos)} ${gerarNumeroAleatorio(1000, 9999)}`;
     },
     // Estilo mágico/místico
     () => {
-      const adjetivosMisticos = ['Ancient', 'Mystic', 'Arcane', 'Ethereal', 'Celestial', 'Divine', 'Sacred', 'Eldritch'];
-      const objetosMagicos = ['Grimoire', 'Artifact', 'Relic', 'Tome', 'Scroll', 'Wand', 'Staff', 'Crystal'];
+      const adjetivosMisticos = data.midia.magico.adjetivos;
+      const objetosMagicos = data.midia.magico.objetos;
       return `The ${obterElementoAleatorio(adjetivosMisticos)} ${obterElementoAleatorio(objetosMagicos)}`;
     }
   ];
   return estilos[Math.floor(Math.random() * estilos.length)]();
 };
 
-const gerarNomeNumeroFantasia = () => {
+const gerarNomeNumeroFantasia = (data: RandomNameData) => {
   // Escolhe um número de fantasia e combina com um substantivo ou adjetivo
-  const numero = obterElementoAleatorio(numerosFantasia);
-  const tipo = Math.random() > 0.5 ? obterElementoAleatorio(substantivos) : obterElementoAleatorio(adjetivos);
+  const numero = obterElementoAleatorio(data.numeros);
+  const tipo = Math.random() > 0.5 ? obterElementoAleatorio(data.substantivos) : obterElementoAleatorio(data.adjetivos);
   
   // 50% de chance de inverter a ordem
   return Math.random() > 0.5 ? `${numero} ${tipo}` : `${tipo} ${numero}`;
 };
 
 export default function Aleatorios() {
+  const { t, language } = useLanguage();
   const [tipoNome, setTipoNome] = useState('composto');
   const [nomeGerado, setNomeGerado] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [nomesAnteriores, setNomesAnteriores] = useState<string[]>([]);
   const [nomesGerados, setNomesGerados] = useState<Set<string>>(new Set());
   const [comprimento, setComprimento] = useState<'curto' | 'medio' | 'longo'>('medio');
+  const [dados, setDados] = useState<RandomNameData | null>(null);
+
+  // Atualizar dados quando o idioma mudar
+  useEffect(() => {
+    setDados(getRandomNameData(language));
+  }, [language]);
 
   useEffect(() => {
     // Reset de nomes gerados quando mudamos o tipo de nome
@@ -168,6 +106,9 @@ export default function Aleatorios() {
   };
 
   const gerarNome = () => {
+    // Se os dados não foram carregados, não faz nada
+    if (!dados) return;
+    
     setIsGenerating(true);
     
     // Simular um breve delay para efeito visual
@@ -179,60 +120,60 @@ export default function Aleatorios() {
         switch(tipoNome) {
           case 'composto':
             // Substantivo + Adjetivo (ex: SolDourado)
-            return obterElementoAleatorio(substantivos) + capitalizar(obterElementoAleatorio(adjetivos));
+            return obterElementoAleatorio(dados.substantivos) + capitalizar(obterElementoAleatorio(dados.adjetivos));
             
           case 'fantasia':
             // Prefixo criativo + Substantivo + Sufixo criativo (ex: NeoSolIan)
-            return obterElementoAleatorio(prefixosCriativos) + 
-                  obterElementoAleatorio(substantivos) + 
-                  obterElementoAleatorio(sufixosCriativos);
+            return obterElementoAleatorio(dados.prefixos) + 
+                  obterElementoAleatorio(dados.substantivos) + 
+                  obterElementoAleatorio(dados.sufixos);
             
           case 'acao':
             // Verbo + Substantivo (ex: VoarEstrela)
-            return capitalizar(obterElementoAleatorio(verbos)) + 
-                  obterElementoAleatorio(substantivos);
+            return capitalizar(obterElementoAleatorio(dados.verbos)) + 
+                  obterElementoAleatorio(dados.substantivos);
             
           case 'silabas': {
             // Combinação de sílabas aleatórias (quantidade ajustada pelo fator de comprimento)
             const numSilabas = Math.max(2, Math.round(gerarNumeroAleatorio(2, 4) * fatorComprimento));
             let resultado = '';
             for (let i = 0; i < numSilabas; i++) {
-              resultado += capitalizar(obterElementoAleatorio(silabas));
+              resultado += capitalizar(obterElementoAleatorio(dados.silabas));
             }
             return resultado;
           }
             
           case 'elementos': {
             // Elemento da natureza + Adjetivo ou Substantivo
-            const elemento = obterElementoAleatorio(elementosNatureza);
+            const elemento = obterElementoAleatorio(dados.elementosNatureza);
             return Math.random() > 0.5 
-              ? elemento + capitalizar(obterElementoAleatorio(adjetivos))
-              : elemento + capitalizar(obterElementoAleatorio(substantivos));
+              ? elemento + capitalizar(obterElementoAleatorio(dados.adjetivos))
+              : elemento + capitalizar(obterElementoAleatorio(dados.substantivos));
           }
             
           case 'mitologia': {
             // Entidade mitológica + Adjetivo ou Elemento
-            const entidade = obterElementoAleatorio(mitologiaEntidades);
+            const entidade = obterElementoAleatorio(dados.mitologiaEntidades);
             return Math.random() > 0.5
-              ? entidade + 'De' + capitalizar(obterElementoAleatorio(elementosNatureza))
-              : entidade + capitalizar(obterElementoAleatorio(adjetivos));
+              ? entidade + 'De' + capitalizar(obterElementoAleatorio(dados.elementosNatureza))
+              : entidade + capitalizar(obterElementoAleatorio(dados.adjetivos));
           }
             
           case 'cores': {
             // Cor + Substantivo ou cor + Entidade
-            const cor = obterElementoAleatorio(cores);
+            const cor = obterElementoAleatorio(dados.cores);
             return Math.random() > 0.5
-              ? cor + capitalizar(obterElementoAleatorio(substantivos))
-              : cor + capitalizar(obterElementoAleatorio(mitologiaEntidades));
+              ? cor + capitalizar(obterElementoAleatorio(dados.substantivos))
+              : cor + capitalizar(obterElementoAleatorio(dados.mitologiaEntidades));
           }
             
           case 'midia':
             // Nome baseado em estilos de mídia popular
-            return gerarNomeMidia();
+            return gerarNomeMidia(dados);
             
           case 'numeros':
             // Nome baseado em números fantasiosos
-            return gerarNomeNumeroFantasia();
+            return gerarNomeNumeroFantasia(dados);
             
           default:
             return 'NomeAleatorio' + gerarNumeroAleatorio(100, 999);
@@ -255,173 +196,175 @@ export default function Aleatorios() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      <Header />
+    <PageTransition>
+      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+        <Header />
 
-      <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
-        <div className="max-w-2xl w-full">
-          <h1 className="text-4xl sm:text-5xl font-bold text-teal-600 dark:text-teal-400 mb-4 text-center">
-            Nomes Aleatórios
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
-            Crie nomes incomuns e interessantes para qualquer finalidade
-          </p>
+        <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
+          <div className="max-w-2xl w-full">
+            <h1 className="text-4xl sm:text-5xl font-bold text-teal-600 dark:text-teal-400 mb-4 text-center">
+              {t('random.title')}
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
+              {t('random.description')}
+            </p>
 
-          <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
-            <div className="mb-6">
-              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                Estilo do Nome
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'composto' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('composto')}
-                >
-                  Composto
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'fantasia' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('fantasia')}
-                >
-                  Fantasia
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'acao' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('acao')}
-                >
-                  Ação
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'silabas' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('silabas')}
-                >
-                  Sílabas
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'elementos' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('elementos')}
-                >
-                  Elementos
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'mitologia' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('mitologia')}
-                >
-                  Mitologia
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'cores' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('cores')}
-                >
-                  Cores
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'midia' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('midia')}
-                >
-                  Mídia
-                </button>
-                <button 
-                  className={`px-4 py-2 rounded-lg ${tipoNome === 'numeros' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setTipoNome('numeros')}
-                >
-                  Números
-                </button>
-              </div>
-              
-              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                Comprimento
-              </label>
-              <div className="flex mb-6 gap-3">
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'curto' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setComprimento('curto')}
-                >
-                  Curto
-                </button>
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'medio' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setComprimento('medio')}
-                >
-                  Médio
-                </button>
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'longo' 
-                    ? 'bg-teal-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setComprimento('longo')}
-                >
-                  Longo
-                </button>
-              </div>
-            </div>
-
-            <button 
-              className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors"
-              onClick={gerarNome}
-              disabled={isGenerating}
-            >
-              {isGenerating ? 'Gerando...' : 'Gerar Nome'}
-            </button>
-          </div>
-
-          {nomeGerado && (
-            <NomeDisplay 
-              nome={nomeGerado} 
-              onGerarNovo={gerarNome}
-              corDestaque="text-teal-600 dark:text-teal-400"
-              textoBotaoGerar="Gerar outro nome"
-              categoria="aleatorios"
-            />
-          )}
-          
-          {nomesAnteriores.length > 0 && (
-            <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-4">
-              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Nomes anteriores:
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {nomesAnteriores.map((nome, index) => (
-                  <div 
-                    key={index} 
-                    className="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-gray-800 dark:text-gray-200"
+            <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+              <div className="mb-6">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                  {t('random.style')}
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'composto' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('composto')}
                   >
-                    {nome}
-                  </div>
-                ))}
+                    {t('random.compound')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'fantasia' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('fantasia')}
+                  >
+                    {t('random.fantasy')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'acao' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('acao')}
+                  >
+                    {t('random.action')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'silabas' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('silabas')}
+                  >
+                    {t('random.syllables')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'elementos' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('elementos')}
+                  >
+                    {t('random.elements')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'mitologia' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('mitologia')}
+                  >
+                    {t('random.mythology')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'cores' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('cores')}
+                  >
+                    {t('random.colors')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'midia' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('midia')}
+                  >
+                    {t('random.media')}
+                  </button>
+                  <button 
+                    className={`px-4 py-2 rounded-lg ${tipoNome === 'numeros' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setTipoNome('numeros')}
+                  >
+                    {t('random.numbers')}
+                  </button>
+                </div>
+                
+                <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                  {t('random.length')}
+                </label>
+                <div className="flex mb-6 gap-3">
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'curto' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setComprimento('curto')}
+                  >
+                    {t('random.short')}
+                  </button>
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'medio' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setComprimento('medio')}
+                  >
+                    {t('random.medium')}
+                  </button>
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${comprimento === 'longo' 
+                      ? 'bg-teal-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setComprimento('longo')}
+                  >
+                    {t('random.long')}
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-          
-          <div className="mt-8">
-            <AdBanner adSlot="aleatorios-footer" />
-          </div>
-        </div>
-      </main>
 
-      <Footer />
-    </div>
+              <button 
+                className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors"
+                onClick={gerarNome}
+                disabled={isGenerating || !dados}
+              >
+                {isGenerating ? t('button.generating') : t('button.generate')}
+              </button>
+            </div>
+
+            {nomeGerado && (
+              <NomeDisplay 
+                nome={nomeGerado} 
+                onGerarNovo={gerarNome}
+                corDestaque="text-teal-600 dark:text-teal-400"
+                textoBotaoGerar={t('button.generate.another')}
+                categoria="aleatorios"
+              />
+            )}
+            
+            {nomesAnteriores.length > 0 && (
+              <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-4">
+                <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('random.previous')}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {nomesAnteriores.map((nome, index) => (
+                    <div 
+                      key={index} 
+                      className="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-gray-800 dark:text-gray-200"
+                    >
+                      {nome}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <div className="mt-8">
+              <AdBanner adSlot="aleatorios-footer" />
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </PageTransition>
   );
 } 

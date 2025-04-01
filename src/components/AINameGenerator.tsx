@@ -9,18 +9,15 @@ import { CARACTERISTICAS_JOGOS, CARACTERISTICAS_GERAIS_JOGOS } from '@/data/cara
 interface AINameGeneratorProps {
   categoria: 'pets' | 'jogos' | 'bebes' | 'aleatorios';
   generoInicial?: 'masculino' | 'feminino' | 'neutro';
-  origemInicial?: 'brasileiro' | 'internacional' | 'classico';
 }
 
 export default function AINameGenerator({ 
   categoria, 
-  generoInicial = 'neutro',
-  origemInicial = 'brasileiro'
+  generoInicial = 'neutro'
 }: AINameGeneratorProps) {
   const [options, setOptions] = useState<NameGenerationOptions>({
     categoria,
     genero: generoInicial,
-    origem: origemInicial,
     quantidade: 1,
     caracteristicas: [],
     modo: 'hibrido', // Modo fixo: híbrido
@@ -488,44 +485,6 @@ export default function AINameGenerator({
 
       <div className="mb-4">
         <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-          Origem
-        </label>
-        <div className="grid grid-cols-3 gap-3">
-          <button 
-            className={`px-3 py-2 rounded-lg text-sm ${
-              options.origem === 'brasileiro' 
-                ? 'bg-green-500 text-white' 
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-            }`}
-            onClick={() => setOptions({...options, origem: 'brasileiro'})}
-          >
-            Brasileiro
-          </button>
-          <button 
-            className={`px-3 py-2 rounded-lg text-sm ${
-              options.origem === 'internacional' 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-            }`}
-            onClick={() => setOptions({...options, origem: 'internacional'})}
-          >
-            Internacional
-          </button>
-          <button 
-            className={`px-3 py-2 rounded-lg text-sm ${
-              options.origem === 'classico' 
-                ? 'bg-amber-500 text-white' 
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-            }`}
-            onClick={() => setOptions({...options, origem: 'classico'})}
-          >
-            Clássico
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
           Características desejadas
         </label>
         <div className="flex gap-2 mb-2">
@@ -603,9 +562,6 @@ export default function AINameGenerator({
           <div className="mt-4 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-300">
               <span className="font-semibold">Significado:</span> {nomesGerados[novoNomeIndex].significado || 'Não disponível'}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-              <span className="font-semibold">Origem:</span> {nomesGerados[novoNomeIndex].origem || 'Não disponível'}
             </p>
             
             {/* Exibir o tipo do animal se estiver na categoria pets e tiver a propriedade tipo */}

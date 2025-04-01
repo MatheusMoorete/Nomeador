@@ -6,6 +6,11 @@ import AdBanner from '@/components/AdBanner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AINameGenerator from '@/components/AINameGenerator';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { 
+  getBabyNameData
+} from '@/data/babyNames';
+import PageTransition from '@/components/PageTransition';
 
 // Interface para nomes completos com significado e características
 interface NomeCompleto {
@@ -1464,368 +1469,300 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default function Bebes() {
+  const { language, t } = useLanguage();
   const [genero, setGenero] = useState('menino');
-  const [origem, setOrigem] = useState('brasileiro');
-  const [nomeGerado, setNomeGerado] = useState('');
-  const [significado, setSignificado] = useState('');
-  const [caracteristica, setCaracteristica] = useState('');
-  const [nomesAnteriores, setNomesAnteriores] = useState<{nome: string; significado?: string; caracteristica?: string}[]>([]);
+  const [nomeGerado, setNomeGerado] = useState<string | null>(null);
+  const [dadosCompletos, setDadosCompletos] = useState<NomeCompleto | undefined>(undefined);
   const [isGenerating, setIsGenerating] = useState(false);
   const [modoGerador, setModoGerador] = useState<'tradicional' | 'ia'>('tradicional');
-  // Atualizar estado para incluir gênero neutro
-  const [nomesUtilizados, setNomesUtilizados] = useState<{
-    menino: string[],
-    menina: string[],
-    neutro: string[]
-  }>({
+  
+  // Estado para armazenar nomes já utilizados nesta sessão (simplificado, sem origem)
+  const [nomesUtilizados, setNomesUtilizados] = useState<Record<string, string[]>>({
     menino: [],
     menina: [],
     neutro: []
   });
 
+  // Carregar dados com base no idioma atual
+  const babyNameData = getBabyNameData(language);
+  
+  // Juntar todos os nomes por gênero, ignorando a origem
+  const nomesMeninoCompletosUnificados = [
+    ...(babyNameData.meninos?.brasileiro || []),
+    ...(babyNameData.meninos?.internacional || []),
+    ...(babyNameData.meninos?.classico || [])
+  ];
+  
+  const nomesMeninaCompletasUnificadas = [
+    ...(babyNameData.meninas?.brasileiro || []),
+    ...(babyNameData.meninas?.internacional || []),
+    ...(babyNameData.meninas?.classico || [])
+  ];
+  
+  const nomesNeutrosCompletosUnificados = [
+    ...(babyNameData.neutros?.brasileiro || []),
+    ...(babyNameData.neutros?.internacional || []),
+    ...(babyNameData.neutros?.moderno || [])
+  ];
+
+  // Simplificar a função obterNomeCompleto para não depender mais da origem
   const obterNomeCompleto = (nome: string): NomeCompleto | undefined => {
     if (genero === 'menino') {
-      const origemAtual = origem as keyof typeof nomesMeninoCompletosFiltrados;
-      return nomesMeninoCompletosFiltrados[origemAtual].find(item => item.nome === nome);
+      return nomesMeninoCompletosUnificados.find((item: NomeCompleto) => item.nome === nome);
     } else if (genero === 'menina') {
-      const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
-      return nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
-    } else if (genero === 'neutro') {
-      // Para nomes neutros, não há separação por origem
-      return nomesNeutrosCompletosFiltrados.find(item => item.nome === nome);
+      return nomesMeninaCompletasUnificadas.find((item: NomeCompleto) => item.nome === nome);
+    } else {
+      return nomesNeutrosCompletosUnificados.find((item: NomeCompleto) => item.nome === nome);
     }
-    return undefined;
   };
 
   const gerarNome = () => {
     setIsGenerating(true);
     
+    // Simulação de tempo de processamento
     setTimeout(() => {
-      // Escolher uma origem aleatória para mais variedade
-      const origens = ['brasileiro', 'internacional', 'classico'];
-      const origemAleatoria = origens[Math.floor(Math.random() * origens.length)];
-      
-      let listaDeNomes: string[] = [];
-      
+      let nomesDisponiveis: string[] = [];
+      let nome: string = '';
+
       if (genero === 'menino') {
-        // Combinar todas as listas de origem para ter mais variedade
-        listaDeNomes = [
-          ...nomesMenino.brasileiro,
-          ...nomesMenino.internacional, 
-          ...nomesMenino.classico
-        ];
+        // Nomes de menino
+        const nomesCompletos = nomesMeninoCompletosUnificados;
+        const nomesSimples = nomesCompletos.map((item: NomeCompleto) => item.nome);
+        const nomesJaUtilizados = nomesUtilizados.menino;
+        
+        // Filtra apenas nomes que não foram usados
+        nomesDisponiveis = nomesSimples.filter(nome => !nomesJaUtilizados.includes(nome));
+
+        if (nomesDisponiveis.length === 0) {
+          alert(language === 'pt' ? 'Todos os nomes desta categoria já foram mostrados! Recarregue a página para reiniciar.' : 
+                language === 'en' ? 'All names in this category have already been shown! Reload the page to restart.' :
+                'Todos los nombres de esta categoría ya se han mostrado! Recarga la página para reiniciar.');
+          setIsGenerating(false);
+          return;
+        }
+
+        nome = nomesDisponiveis[Math.floor(Math.random() * nomesDisponiveis.length)];
+        
+        // Adiciona o nome à lista de utilizados
+        setNomesUtilizados(prev => ({
+          ...prev,
+          menino: [...prev.menino, nome]
+        }));
       } else if (genero === 'menina') {
-        listaDeNomes = [
-          ...nomesMenina.brasileiro,
-          ...nomesMenina.internacional,
-          ...nomesMenina.classico
-        ];
-      } else if (genero === 'neutro') {
-        // Para nomes neutros, temos apenas uma lista
-        listaDeNomes = nomesNeutro;
-        // Não atualizar a origem para nomes neutros
-      }
-      
-      // Filtrar nomes já utilizados
-      const nomesDisponiveis = listaDeNomes.filter(
-        nome => !nomesUtilizados[genero as keyof typeof nomesUtilizados].includes(nome)
-      );
-      
-      // Se não houver mais nomes disponíveis, exibir uma mensagem de aviso
-      if (nomesDisponiveis.length === 0) {
-        setIsGenerating(false);
-        alert('Todos os nomes disponíveis já foram gerados! Recarregue a página para começar novamente.');
-        return;
-      }
-      
-      // Selecionar um nome aleatório dos nomes disponíveis
-      const indiceAleatorio = Math.floor(Math.random() * nomesDisponiveis.length);
-      const nome = nomesDisponiveis[indiceAleatorio];
-      
-      // Adicionar o nome à lista de utilizados
-      setNomesUtilizados(prev => ({
-        ...prev,
-        [genero]: [...prev[genero as keyof typeof nomesUtilizados], nome]
-      }));
-      
-      let novoSignificado = '';
-      let novaCaracteristica = '';
-      
-      // Atualizar a origem para buscar o significado e característica corretos (exceto para neutro)
-      if (genero !== 'neutro') {
-        // Tentar encontrar em qual origem o nome está para melhor correspondência
-        const origemDoNome = 
-          (genero === 'menino' && nomesMenino.brasileiro.includes(nome)) ? 'brasileiro' :
-          (genero === 'menino' && nomesMenino.internacional.includes(nome)) ? 'internacional' :
-          (genero === 'menino' && nomesMenino.classico.includes(nome)) ? 'classico' :
-          (genero === 'menina' && nomesMenina.brasileiro.includes(nome)) ? 'brasileiro' :
-          (genero === 'menina' && nomesMenina.internacional.includes(nome)) ? 'internacional' :
-          (genero === 'menina' && nomesMenina.classico.includes(nome)) ? 'classico' :
-          origemAleatoria;
+        // Nomes de menina
+        const nomesCompletos = nomesMeninaCompletasUnificadas;
+        const nomesSimples = nomesCompletos.map((item: NomeCompleto) => item.nome);
+        const nomesJaUtilizados = nomesUtilizados.menina;
         
-        setOrigem(origemDoNome);
-      }
-      
-      // Tentar obter o nome completo
-      let nomeCompleto = obterNomeCompleto(nome);
-      
-      // Se não encontrou na origem detectada e não for neutro, procurar em todas as origens
-      if (!nomeCompleto && genero !== 'neutro') {
-        for (const origem of ['brasileiro', 'internacional', 'classico']) {
-          if (genero === 'menino') {
-            const origemAtual = origem as keyof typeof nomesMeninoCompletosFiltrados;
-            const encontrado = nomesMeninoCompletosFiltrados[origemAtual].find(item => item.nome === nome);
-            if (encontrado) {
-              nomeCompleto = encontrado;
-              setOrigem(origem);
-              break;
-            }
-          } else if (genero === 'menina') {
-            const origemAtual = origem as keyof typeof nomesMeninaCompletasFiltradas;
-            const encontrado = nomesMeninaCompletasFiltradas[origemAtual].find(item => item.nome === nome);
-            if (encontrado) {
-              nomeCompleto = encontrado;
-              setOrigem(origem);
-              break;
-            }
-          }
+        // Filtra apenas nomes que não foram usados
+        nomesDisponiveis = nomesSimples.filter(nome => !nomesJaUtilizados.includes(nome));
+
+        if (nomesDisponiveis.length === 0) {
+          alert(language === 'pt' ? 'Todos os nomes desta categoria já foram mostrados! Recarregue a página para reiniciar.' : 
+                language === 'en' ? 'All names in this category have already been shown! Reload the page to restart.' :
+                'Todos los nombres de esta categoría ya se han mostrado! Recarga la página para reiniciar.');
+          setIsGenerating(false);
+          return;
         }
-      }
-      
-      if (nomeCompleto) {
-        novoSignificado = nomeCompleto.significado;
-        novaCaracteristica = nomeCompleto.caracteristica;
+
+        nome = nomesDisponiveis[Math.floor(Math.random() * nomesDisponiveis.length)];
+        
+        // Adiciona o nome à lista de utilizados
+        setNomesUtilizados(prev => ({
+          ...prev,
+          menina: [...prev.menina, nome]
+        }));
       } else {
-        // Se não encontrar o nome no banco de dados completo, adicionar valores padrão
-        // com base no gênero e origem para garantir que todos os nomes tenham informações
-        if (genero === 'menino') {
-          const origemDoNome = origem as keyof typeof nomesMeninoCompletosFiltrados;
-          switch(origemDoNome) {
-            case 'brasileiro':
-              novoSignificado = "nome de origem brasileira";
-              novaCaracteristica = "Costuma ter personalidade forte e marcante";
-              break;
-            case 'internacional':
-              novoSignificado = "nome de origem internacional";
-              novaCaracteristica = "Tende a ser determinado e curioso";
-              break;
-            case 'classico':
-              novoSignificado = "nome clássico e tradicional";
-              novaCaracteristica = "Possui uma natureza leal e confiável";
-              break;
-          }
-        } else if (genero === 'menina') {
-          const origemDoNome = origem as keyof typeof nomesMeninaCompletasFiltradas;
-          switch(origemDoNome) {
-            case 'brasileiro':
-              novoSignificado = "nome de origem brasileira";
-              novaCaracteristica = "Costuma ser expressiva e comunicativa";
-              break;
-            case 'internacional':
-              novoSignificado = "nome de origem internacional";
-              novaCaracteristica = "Tende a ser independente e criativa";
-              break;
-            case 'classico':
-              novoSignificado = "nome clássico e tradicional";
-              novaCaracteristica = "Possui uma natureza amorosa e atenciosa";
-              break;
-          }
-        } else if (genero === 'neutro') {
-          novoSignificado = "nome neutro versátil";
-          novaCaracteristica = "Costuma ter personalidade flexível e adaptável";
-        }
+        // Nomes neutros
+        const nomesCompletos = nomesNeutrosCompletosUnificados;
+        const nomesSimples = nomesCompletos.map((item: NomeCompleto) => item.nome);
+        const nomesJaUtilizados = nomesUtilizados.neutro;
         
-        console.log(`Nome sem dados completos: ${nome}. Adicionado significado e característica padrão.`);
+        // Filtra apenas nomes que não foram usados
+        nomesDisponiveis = nomesSimples.filter(nome => !nomesJaUtilizados.includes(nome));
+
+        if (nomesDisponiveis.length === 0) {
+          alert(language === 'pt' ? 'Todos os nomes desta categoria já foram mostrados! Recarregue a página para reiniciar.' : 
+                language === 'en' ? 'All names in this category have already been shown! Reload the page to restart.' :
+                'Todos los nombres de esta categoría ya se han mostrado! Recarga la página para reiniciar.');
+          setIsGenerating(false);
+          return;
+        }
+
+        nome = nomesDisponiveis[Math.floor(Math.random() * nomesDisponiveis.length)];
+        
+        // Adiciona o nome à lista de utilizados
+        setNomesUtilizados(prev => ({
+          ...prev,
+          neutro: [...prev.neutro, nome]
+        }));
       }
-      
+
       setNomeGerado(nome);
-      setSignificado(novoSignificado);
-      setCaracteristica(novaCaracteristica);
-      
-      // Armazenar o nome atual no histórico, se houver um nome anterior
-      if (nomeGerado) {
-        setNomesAnteriores(prev => [
-          { 
-            nome: nomeGerado, 
-            significado, 
-            caracteristica 
-          }, 
-          ...prev
-        ].slice(0, 5));
-      }
-      
+      setDadosCompletos(obterNomeCompleto(nome));
       setIsGenerating(false);
     }, 600);
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      <Header />
-      
-      <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
-        <div className="max-w-2xl w-full">
-          <h1 className="text-4xl sm:text-5xl font-bold text-pink-600 dark:text-pink-400 mb-4 text-center">
-            Nomes de Bebês
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
-            Encontre o nome perfeito para o novo membro da família
-          </p>
+    <PageTransition>
+      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+        <Header />
+        
+        <main className="flex-grow flex flex-col items-center justify-center px-4 py-8">
+          <div className="max-w-2xl w-full">
+            <h1 className="text-4xl sm:text-5xl font-bold text-pink-600 dark:text-pink-400 mb-4 text-center">
+              {t('nav.babies')}
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-10 text-center">
+              {language === 'pt' ? 'Encontre o nome perfeito para o novo membro da família' : 
+               language === 'en' ? 'Find the perfect name for the new family member' : 
+               'Encuentra el nombre perfecto para el nuevo miembro de la familia'}
+            </p>
 
-          <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
-            <div className="mb-6">
-              <div className="flex justify-center mb-6">
-                <div className="inline-flex rounded-md shadow-sm" role="group">
-                  <button
-                    type="button"
-                    className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-l-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
-                      modoGerador === 'tradicional' 
-                        ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                        : 'bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                    }`}
-                    onClick={() => setModoGerador('tradicional')}
-                  >
-                    Gerador Simples
-                  </button>
-                  <button
-                    type="button"
-                    className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-r-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
-                      modoGerador === 'ia' 
-                        ? 'bg-purple-500 text-white hover:bg-purple-600' 
-                        : 'bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                    }`}
-                    onClick={() => setModoGerador('ia')}
-                  >
-                    Gerador Inteligente
-                  </button>
-                </div>
-              </div>
-
-              {modoGerador === 'tradicional' ? (
-                <>
-              <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
-                Gênero
-              </label>
-              <div className="flex flex-wrap gap-2 mb-6">
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setGenero('menino')}
-                >
-                  Menino
-                </button>
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menina' 
-                    ? 'bg-pink-500 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setGenero('menina')}
-                >
-                  Menina
-                </button>
-                <button 
-                  className={`flex-1 px-4 py-2 rounded-lg ${genero === 'neutro' 
-                    ? 'bg-purple-500 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
-                  onClick={() => setGenero('neutro')}
-                >
-                  Neutro
-                </button>
-              </div>
-              
-                <button 
-                    className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
-                genero === 'menino' 
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                  : genero === 'menina'
-                    ? 'bg-pink-500 hover:bg-pink-600 text-white'
-                    : 'bg-purple-500 hover:bg-purple-600 text-white'
-              }`}
-              onClick={gerarNome}
-              disabled={isGenerating}
-            >
-              {isGenerating ? 'Gerando...' : 'Gerar Nome'}
-            </button>
-                </>
-              ) : (
-                <AINameGenerator 
-                  categoria="bebes" 
-                  generoInicial={
-                    genero === 'menino' 
-                      ? 'masculino' 
-                      : genero === 'menina' 
-                        ? 'feminino' 
-                        : 'neutro'
-                  } 
-                  origemInicial={origem as 'brasileiro' | 'internacional' | 'classico'}
-                />
-              )}
-            </div>
-          </div>
-
-          {modoGerador === 'tradicional' && nomeGerado && (
-            <div className="w-full flex flex-col gap-2">
-              <NomeDisplay 
-                nome={nomeGerado} 
-                caracteristica={significado && caracteristica 
-                  ? `Significado: ${significado}\nCaracterística: ${caracteristica}`
-                  : significado 
-                    ? `Significado: ${significado}` 
-                    : caracteristica 
-                      ? `Característica: ${caracteristica}`
-                      : ''}
-                onGerarNovo={gerarNome}
-                corDestaque={genero === 'menino' 
-                  ? 'text-blue-500 dark:text-blue-400' 
-                  : genero === 'menina'
-                    ? 'text-pink-500 dark:text-pink-400'
-                    : 'text-purple-500 dark:text-purple-400'}
-                mostrarAnuncio={false}
-                categoria="bebes"
-              />
-              
-              {nomesAnteriores.length > 0 && (
-                <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mt-2">
-                  <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Nomes anteriores:
-                  </h3>
-                  <div className="space-y-2">
-                    {nomesAnteriores.map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="bg-gray-50 dark:bg-gray-700 p-2 rounded-lg"
-                      >
-                        <div className="font-medium text-lg">
-                          {item.nome}
-                        </div>
-                        {item.significado && (
-                          <div className="text-sm text-gray-600 dark:text-gray-300">
-                            <span className="font-medium">Significado:</span> {item.significado}
-                          </div>
-                        )}
-                        {item.caracteristica && (
-                          <div className="text-sm text-gray-600 dark:text-gray-300">
-                            <span className="font-medium">Característica:</span> {item.caracteristica}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+            <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+              <div className="mb-6">
+                <div className="flex justify-center mb-6">
+                  <div className="inline-flex rounded-md shadow-sm" role="group">
+                    <button
+                      type="button"
+                      className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-l-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
+                        modoGerador === 'tradicional' 
+                          ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                          : 'bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                      }`}
+                      onClick={() => setModoGerador('tradicional')}
+                    >
+                      {language === 'pt' ? 'Gerador Simples' : 
+                       language === 'en' ? 'Simple Generator' : 
+                       'Generador Simple'}
+                    </button>
+                    <button
+                      type="button"
+                      className={`px-4 py-2 text-sm font-medium border border-gray-300 rounded-r-lg hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 ${
+                        modoGerador === 'ia' 
+                          ? 'bg-purple-500 text-white hover:bg-purple-600' 
+                          : 'bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                      }`}
+                      onClick={() => setModoGerador('ia')}
+                    >
+                      {language === 'pt' ? 'Gerador Inteligente' : 
+                       language === 'en' ? 'Smart Generator' : 
+                       'Generador Inteligente'}
+                    </button>
                   </div>
                 </div>
-              )}
-              
-              <div className="mt-2">
-                <AdBanner adSlot="bebes-historico" />
+
+                {modoGerador === 'tradicional' ? (
+                  <>
+                <label className="block text-gray-700 dark:text-gray-300 mb-2 font-medium">
+                  {language === 'pt' ? 'Gênero' : 
+                   language === 'en' ? 'Gender' : 
+                   'Género'}
+                </label>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menino' 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setGenero('menino')}
+                  >
+                    {language === 'pt' ? 'Menino' : 
+                     language === 'en' ? 'Boy' : 
+                     'Niño'}
+                  </button>
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${genero === 'menina' 
+                      ? 'bg-pink-500 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setGenero('menina')}
+                  >
+                    {language === 'pt' ? 'Menina' : 
+                     language === 'en' ? 'Girl' : 
+                     'Niña'}
+                  </button>
+                  <button 
+                    className={`flex-1 px-4 py-2 rounded-lg ${genero === 'neutro' 
+                      ? 'bg-purple-500 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}
+                    onClick={() => setGenero('neutro')}
+                  >
+                    {language === 'pt' ? 'Neutro' : 
+                     language === 'en' ? 'Neutral' : 
+                     'Neutro'}
+                  </button>
+              </div>
+
+              <button 
+                      className={`w-full mt-6 py-3 px-4 font-medium rounded-lg transition-colors ${
+                  genero === 'menino' 
+                    ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                    : genero === 'menina'
+                      ? 'bg-pink-500 hover:bg-pink-600 text-white'
+                      : 'bg-purple-500 hover:bg-purple-600 text-white'
+                }`}
+                onClick={gerarNome}
+                disabled={isGenerating}
+              >
+                {isGenerating ? t('button.generating') : t('button.generate')}
+              </button>
+                  </>
+                ) : (
+                  <AINameGenerator 
+                    categoria="bebes" 
+                    generoInicial={
+                      genero === 'menino' 
+                        ? 'masculino' 
+                        : genero === 'menina' 
+                          ? 'feminino' 
+                          : 'neutro'
+                    } 
+                  />
+                )}
               </div>
             </div>
-          )}
-        </div>
 
-        <div className="w-full max-w-2xl mt-8">
-          <AdBanner adSlot="bebes-footer" />
-        </div>
-      </main>
-      
-      <Footer />
-    </div>
+            {modoGerador === 'tradicional' && nomeGerado && (
+              <div className="w-full flex flex-col gap-2">
+                <NomeDisplay 
+                  nome={nomeGerado} 
+                  caracteristica={dadosCompletos && dadosCompletos.significado && dadosCompletos.caracteristica 
+                    ? `${language === 'pt' ? 'Significado' : 
+                         language === 'en' ? 'Meaning' : 
+                         'Significado'}: ${dadosCompletos.significado}\n${
+                         language === 'pt' ? 'Característica' : 
+                         language === 'en' ? 'Characteristic' : 
+                         'Característica'}: ${dadosCompletos.caracteristica}`
+                    : dadosCompletos && dadosCompletos.significado 
+                      ? `${language === 'pt' ? 'Significado' : 
+                           language === 'en' ? 'Meaning' : 
+                           'Significado'}: ${dadosCompletos.significado}` 
+                      : dadosCompletos && dadosCompletos.caracteristica 
+                        ? `${language === 'pt' ? 'Característica' : 
+                             language === 'en' ? 'Characteristic' : 
+                             'Característica'}: ${dadosCompletos.caracteristica}`
+                        : ''}
+                  onGerarNovo={gerarNome}
+                  corDestaque={genero === 'menino' 
+                    ? 'text-blue-500 dark:text-blue-400' 
+                    : genero === 'menina'
+                      ? 'text-pink-500 dark:text-pink-400'
+                      : 'text-purple-500 dark:text-purple-400'}
+                  mostrarAnuncio={false}
+                  categoria="bebes"
+                  textoBotaoGerar={t('button.generate.another')}
+                />
+                  </div>
+                )}
+              </div>
+
+          <div className="w-full max-w-2xl mt-8">
+            <AdBanner adSlot="bebes-footer" />
+          </div>
+        </main>
+        
+        <Footer />
+      </div>
+    </PageTransition>
   );
 } 

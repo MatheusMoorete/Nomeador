@@ -5,7 +5,6 @@
 export interface NameGenerationOptions {
   categoria: 'pets' | 'jogos' | 'bebes' | 'aleatorios';
   genero?: 'masculino' | 'feminino' | 'neutro';
-  origem?: 'brasileiro' | 'internacional' | 'classico';
   quantidade?: number;
   caracteristicas?: string[];
   evitar?: string[];
@@ -95,7 +94,7 @@ function shuffleArray<T>(array: T[]): T[] {
  * Constrói o prompt para a API baseado nas opções do usuário
  */
 function buildPrompt(options: NameGenerationOptions): string {
-  const { categoria, genero, origem, caracteristicas, evitar } = options;
+  const { categoria, genero, caracteristicas, evitar } = options;
   
   let categoriaTexto = '';
   let tipoAnimal = '';
@@ -159,10 +158,6 @@ function buildPrompt(options: NameGenerationOptions): string {
   
   if (genero) {
     prompt += ` do gênero ${genero}`;
-  }
-  
-  if (origem) {
-    prompt += ` com origem ${origem}`;
   }
   
   // Filtrando características para remover o tipo de animal se já foi usado

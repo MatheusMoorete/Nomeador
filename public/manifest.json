@@ -1,0 +1,76 @@
+{
+  "name": "Nomeador - Gerador de Nomes",
+  "short_name": "Nomeador",
+  "description": "Gerador de nomes para pets, jogos, bebês e muito mais!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/maskable-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nomes para Pets",
+      "short_name": "Pets",
+      "description": "Gerar nomes para pets",
+      "url": "/pets",
+      "icons": [{ "src": "/icons/pet-icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nomes para Jogos",
+      "short_name": "Jogos",
+      "description": "Gerar nomes para jogos",
+      "url": "/jogos",
+      "icons": [{ "src": "/icons/game-icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nomes para Bebês",
+      "short_name": "Bebês",
+      "description": "Gerar nomes para bebês",
+      "url": "/bebes",
+      "icons": [{ "src": "/icons/baby-icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nomes Aleatórios",
+      "short_name": "Aleatórios",
+      "description": "Gerar nomes aleatórios",
+      "url": "/aleatorios",
+      "icons": [{ "src": "/icons/random-icon.png", "sizes": "192x192" }]
+    }
+  ],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false
+} 

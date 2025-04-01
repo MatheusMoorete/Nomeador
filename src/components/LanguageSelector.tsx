@@ -5,7 +5,7 @@ import { useLanguage, Language } from '@/contexts/LanguageContext';
 import { Globe } from 'lucide-react';
 
 export default function LanguageSelector() {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   
